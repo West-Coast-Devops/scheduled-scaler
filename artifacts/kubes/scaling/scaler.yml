@@ -1,0 +1,14 @@
+apiVersion: "scaling.k8s.restdev.com/v1alpha1"
+kind: ScheduledScaler
+metadata:
+  name: my-scheduled-scaler-1
+spec:
+  target:
+    type: hpa
+    name: my-hpa-1
+  steps:
+  #run at 5:30 UTC
+  - runat: '0 40 14 * * *'
+    mode: range
+    minReplicas: 1
+    maxReplicas: 5

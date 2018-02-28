@@ -1,0 +1,29 @@
+---
+  apiVersion: "extensions/v1beta1"
+  kind: "Deployment"
+  metadata:
+    name: "k8s-restdev-scaling"
+    namespace: "kube-system"
+  spec:
+    strategy:
+      rollingUpdate:
+        maxSurge: 80%
+        maxUnavailable: 50%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          name: "k8s-restdev-scaling"
+      spec:
+        containers:
+          -
+            image: "[IMAGE]"
+            name: "k8s-restdev-scaling"
+            command: ["/bin/k8s-restdev-scaling"]
+            volumeMounts:
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
+        volumes:
+          - name: ssl-certs
+            hostPath:
+              path: /etc/ssl/certs
