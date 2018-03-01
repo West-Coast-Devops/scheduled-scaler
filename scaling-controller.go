@@ -75,12 +75,12 @@ func (c *ScheduledScalerController) Run(stopCh chan struct{}) error {
  *
  */
 func (c *ScheduledScalerController) scheduledScalerAdd(obj interface{}) {
-				scheduledScaler := obj.(*scalingv1alpha1.ScheduledScaler)
-				if scheduledScaler.Spec.Target.Type == "hpa" {
-					c.scheduledScalerHpaCronAdd(obj)
-				} else if scheduledScaler.Spec.Target.Type == "ig" {
-					c.scheduledScalerIgCronAdd(obj)
-				}
+	scheduledScaler := obj.(*scalingv1alpha1.ScheduledScaler)
+	if scheduledScaler.Spec.Target.Type == "hpa" {
+		c.scheduledScalerHpaCronAdd(obj)
+	} else if scheduledScaler.Spec.Target.Type == "ig" {
+		c.scheduledScalerIgCronAdd(obj)
+	}
 }
 
 func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(obj interface{}) {
@@ -131,11 +131,11 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(obj interface{}) {
 					panic(err.Error())
 				}
 				hpa.Spec.MinReplicas = step.Replicas
-        hpa.Spec.MaxReplicas = *step.Replicas
-        _, err := hpaClient.Update(hpa)
-        if err != nil {
-          glog.Infof("FAILED TO UPDATE HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
-        } else {
+				hpa.Spec.MaxReplicas = *step.Replicas
+				_, err := hpaClient.Update(hpa)
+				if err != nil {
+					glog.Infof("FAILED TO UPDATE HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
+				} else {
 					ssCopy.Status.Mode = step.Mode
 					ssCopy.Status.MinReplicas = *step.Replicas
 					ssCopy.Status.MaxReplicas = *step.Replicas
