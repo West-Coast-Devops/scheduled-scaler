@@ -34,7 +34,7 @@ import (
  */
 type ScheduledScalerTarget struct {
 	Name string
-	Type string
+	Kind string
 	Cron *cron.Cron
 }
 
@@ -74,9 +74,9 @@ func (c *ScheduledScalerController) Run(stopCh chan struct{}) error {
  */
 func (c *ScheduledScalerController) scheduledScalerAdd(obj interface{}) {
 	scheduledScaler := obj.(*scalingv1alpha1.ScheduledScaler)
-	if scheduledScaler.Spec.Target.Type == "hpa" {
+	if scheduledScaler.Spec.Target.Kind == "HorizontalPodAutoscaler" {
 		c.scheduledScalerHpaCronAdd(obj)
-	} else if scheduledScaler.Spec.Target.Type == "ig" {
+	} else if scheduledScaler.Spec.Target.Kind == "InstanceGroup" {
 		c.scheduledScalerIgCronAdd(obj)
 	}
 }
@@ -121,7 +121,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(obj interface{}) {
 		})
 	}
 	scalingcron.Start(stepsCron)
-	c.scheduledScalerTargets = append(c.scheduledScalerTargets, ScheduledScalerTarget{scheduledScaler.Spec.Target.Name, scheduledScaler.Spec.Target.Type, stepsCron})
+	c.scheduledScalerTargets = append(c.scheduledScalerTargets, ScheduledScalerTarget{scheduledScaler.Spec.Target.Name, scheduledScaler.Spec.Target.Kind, stepsCron})
 	glog.Infof("SCHEDULED SCALER CREATED: %s -> %s", scheduledScaler.Name, scheduledScaler.Spec.Target.Name)
 }
 
@@ -175,7 +175,7 @@ func (c *ScheduledScalerController) scheduledScalerIgCronAdd(obj interface{}) {
 	}
 
 	scalingcron.Start(stepsCron)
-	c.scheduledScalerTargets = append(c.scheduledScalerTargets, ScheduledScalerTarget{scheduledScaler.Spec.Target.Name, scheduledScaler.Spec.Target.Type, stepsCron})
+	c.scheduledScalerTargets = append(c.scheduledScalerTargets, ScheduledScalerTarget{scheduledScaler.Spec.Target.Name, scheduledScaler.Spec.Target.Kind, stepsCron})
 	glog.Infof("SCHEDULED SCALER CREATED: %s -> %s", scheduledScaler.Name, scheduledScaler.Spec.Target.Name)
 }
 

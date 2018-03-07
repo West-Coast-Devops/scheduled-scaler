@@ -29,6 +29,12 @@ type ScheduledScaler struct {
 	Status ScheduledScalerStatus `json:"status"`
 }
 
+type ScheduledScalerTarget struct {
+	Kind string `json:"kind"`
+	ApiVersion string `json:"apiVersion"`
+	Name string `json:"name"`
+}
+
 type ScheduledScalerStep struct {
 	Runat string `json:"runat"`
 	Mode string `json:"mode"`
@@ -38,10 +44,7 @@ type ScheduledScalerStep struct {
 }
 
 type ScheduledScalerSpec struct {
-	Target struct {
-		Type string `json:"type"`
-		Name string `json:"name"`
-	} `json:"target"`
+	Target ScheduledScalerTarget `json:"target"`
 	Steps []ScheduledScalerStep `json:"steps"`
 	TimeZone string `json:"timeZone"`
 }
