@@ -59,8 +59,9 @@ As you'll see above you can target either instance groups or hpa, but all the ot
 | Option | Description | Required |
 |--|--|--|
 | spec.timeZone | Timezone to run crons in | False |
-| spec.target.type | Type of target (ig/hpa) | True
+| spec.target.kind | Type of target (InstanceGroup/HorizontalPodAutoscaler) | True
 | spec.target.name | Name of the target resource | True
+| spec.target.apiVersion | API Version of the target | True
 | spec.steps | List of steps | True
 | spec.steps[].runat | Cronjob time string (gocron) | True
 | spec.steps[].mode | Type of scaling to run (fixed/range) | True
