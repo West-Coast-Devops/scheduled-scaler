@@ -4,8 +4,9 @@ metadata:
   name: my-scheduled-scaler-1
 spec:
   target:
-    type: hpa
+    kind: hpa
     name: my-hpa-1
+    apiVersion: autoscaling/v1
   steps:
   #run at 5:30 UTC
   - runat: '0 40 14 * * *'
