@@ -5,15 +5,10 @@ import (
 	"fmt"
 	"time"
 	"reflect"
-	"strings"
-	"io/ioutil"
-
-	"net/http"
 
 	"github.com/golang/glog"
 	"github.com/robfig/cron"
 
-	//kubeinformers "k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/tools/cache"
@@ -23,6 +18,9 @@ import (
 	informers "k8s.restdev.com/operators/pkg/client/informers/externalversions"
 	listers "k8s.restdev.com/operators/pkg/client/listers/scaling/v1alpha1"
 	scalingv1alpha1 "k8s.restdev.com/operators/pkg/apis/scaling/v1alpha1"
+	scalingstep "k8s.restdev.com/operators/pkg/services/scaling/step"
+	scalingcron "k8s.restdev.com/operators/pkg/services/scaling/cron"
+	scalingmetadata "k8s.restdev.com/operators/pkg/services/scaling/metadata"
 
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2/google"
@@ -96,79 +94,39 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(obj interface{}) {
 		panic(err.Error())
 	}
 	ssCopy := ss.DeepCopy()
-	l, _ := time.LoadLocation(tz)
-	stepsCron := cron.NewWithLocation(l)
+	stepsCron := scalingcron.Create(tz)
 	for key := range ssCopy.Spec.Steps {
 		step := scheduledScaler.Spec.Steps[key]
-		s, _ := cron.Parse(step.Runat)
-		if step.Mode == "range" {
-			stepsCron.Schedule(s, cron.FuncJob(func() {
-				hpa, err = hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
+		min, max := scalingstep.Parse(step)
+		scalingcron.Push(stepsCron, step.Runat, func() {
+			hpa, err = hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
+			if err != nil {
+				panic(err.Error())
+			}
+			hpa.Spec.MinReplicas = min
+			hpa.Spec.MaxReplicas = *max
+			_, err := hpaClient.Update(hpa)
+			if err != nil {
+				glog.Infof("FAILED TO UPDATE HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
+			} else {
+				ssCopy.Status.Mode = step.Mode
+				ssCopy.Status.MinReplicas = *min
+				ssCopy.Status.MaxReplicas = *max
+				_, err := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ssCopy)
 				if err != nil {
-					panic(err.Error())
+					glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %s", scheduledScaler.Name, err.Error())
 				}
-				hpa.Spec.MinReplicas = step.MinReplicas
-				hpa.Spec.MaxReplicas = *step.MaxReplicas
-				_, err := hpaClient.Update(hpa)
-				if err != nil {
-					glog.Infof("FAILED TO UPDATE HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
-				} else {
-					ssCopy.Status.Mode = step.Mode
-					ssCopy.Status.MinReplicas = *step.MinReplicas
-					ssCopy.Status.MaxReplicas = *step.MaxReplicas
-					_, err := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ssCopy)
-					if err != nil {
-						glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %s", scheduledScaler.Name, err.Error())
-					}
-					glog.Infof("SETTING RANGE SCALER: %s/%s -> %s - %d:%d", scheduledScaler.Namespace, scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *step.MinReplicas, *step.MaxReplicas)
-				}
-			}))
-		}
-		if step.Mode == "fixed" {
-			stepsCron.Schedule(s, cron.FuncJob(func() {
-				hpa, err = hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
-				if err != nil {
-					panic(err.Error())
-				}
-				hpa.Spec.MinReplicas = step.Replicas
-				hpa.Spec.MaxReplicas = *step.Replicas
-				_, err := hpaClient.Update(hpa)
-				if err != nil {
-					glog.Infof("FAILED TO UPDATE HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
-				} else {
-					ssCopy.Status.Mode = step.Mode
-					ssCopy.Status.MinReplicas = *step.Replicas
-					ssCopy.Status.MaxReplicas = *step.Replicas
-					_, err := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ssCopy)
-					if err != nil {
-						glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %s", scheduledScaler.Name, err.Error())
-					}
-					glog.Infof("SETTING FIXED SCALER: %s/%s -> %s - %d", scheduledScaler.Namespace, scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *step.Replicas)
-				}
-			}))
-		}
+				glog.Infof("SETTING RANGE SCALER: %s/%s -> %s - %d:%d", scheduledScaler.Namespace, scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *min, *max)
+			}
+		})
 	}
-	stepsCron.Start()
+	scalingcron.Start(stepsCron)
 	c.scheduledScalerTargets = append(c.scheduledScalerTargets, ScheduledScalerTarget{scheduledScaler.Spec.Target.Name, scheduledScaler.Spec.Target.Type, stepsCron})
 	glog.Infof("SCHEDULED SCALER CREATED: %s -> %s", scheduledScaler.Name, scheduledScaler.Spec.Target.Name)
 }
 
 func (c *ScheduledScalerController) scheduledScalerIgCronAdd(obj interface{}) {
-	httpclient := &http.Client{}
-	projectIdReq, err := http.NewRequest("GET", "http://metadata.google.internal/computeMetadata/v1/project/project-id", nil)
-	projectIdReq.Header.Add("Metadata-Flavor", "Google")
-	projectIdResp, err := httpclient.Do(projectIdReq)
-	zoneReq, err := http.NewRequest("GET", "http://metadata.google.internal/computeMetadata/v1/instance/zone", nil)
-	zoneReq.Header.Add("Metadata-Flavor", "Google")
-	zoneResp, err := httpclient.Do(zoneReq)
-	defer zoneResp.Body.Close()
-	defer projectIdResp.Body.Close()
-	projectIdBody, err := ioutil.ReadAll(projectIdResp.Body)
-	projectId := string(projectIdBody)
-	zoneBody, err := ioutil.ReadAll(zoneResp.Body)
-	zoneSlice := strings.Split(string(zoneBody), "/")
-	zone := zoneSlice[ len(zoneSlice) - 1 ]
-
+	projectId, zone, _ := scalingmetadata.GetClusterInfo()
 	scheduledScaler := obj.(*scalingv1alpha1.ScheduledScaler)
 	tz := scheduledScaler.Spec.TimeZone
 	ss, err := c.scheduledScalersLister.ScheduledScalers(scheduledScaler.Namespace).Get(scheduledScaler.Name)
@@ -192,54 +150,31 @@ func (c *ScheduledScalerController) scheduledScalerIgCronAdd(obj interface{}) {
 	}
 
 	ssCopy := ss.DeepCopy()
-	l, _ := time.LoadLocation(tz)
-	stepsCron := cron.NewWithLocation(l)
+	stepsCron := scalingcron.Create(tz)
 	for key := range scheduledScaler.Spec.Steps {
 		step := scheduledScaler.Spec.Steps[key]
-		s, _ := cron.Parse(step.Runat)
-		if step.Mode == "range" {
-			stepsCron.Schedule(s, cron.FuncJob(func() {
-				autoscaler, err = computeService.Autoscalers.Get(projectId, zone, scheduledScaler.Spec.Target.Name).Do()
-				autoscaler.AutoscalingPolicy.MaxNumReplicas = int64(*step.MaxReplicas)
-				autoscaler.AutoscalingPolicy.MinNumReplicas = int64(*step.MinReplicas)
-				_, err := computeService.Autoscalers.Update(projectId, zone, autoscaler).Do()
+		min, max := scalingstep.Parse(step)
+		scalingcron.Push(stepsCron, step.Runat, func() {
+			autoscaler, err = computeService.Autoscalers.Get(projectId, zone, scheduledScaler.Spec.Target.Name).Do()
+			autoscaler.AutoscalingPolicy.MaxNumReplicas = int64(*max)
+			autoscaler.AutoscalingPolicy.MinNumReplicas = int64(*min)
+			_, err := computeService.Autoscalers.Update(projectId, zone, autoscaler).Do()
+			if err != nil {
+				glog.Infof("FAILED TO UPDATE IG AUTOSCALER: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
+			} else {
+				ssCopy.Status.Mode = step.Mode
+				ssCopy.Status.MinReplicas = *min
+				ssCopy.Status.MaxReplicas = *max
+				_, err := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ssCopy)
 				if err != nil {
-					glog.Infof("FAILED TO UPDATE IG AUTOSCALER: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
-				} else {
-					ssCopy.Status.Mode = step.Mode
-					ssCopy.Status.MinReplicas = *step.MinReplicas
-					ssCopy.Status.MaxReplicas = *step.MaxReplicas
-					_, err := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ssCopy)
-					if err != nil {
-						glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %s", scheduledScaler.Name, err.Error())
-					}
-					glog.Infof("SETTING RANGE IG SCALER: %s -> %s - %d/%d", scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *step.MinReplicas, *step.MaxReplicas)
+					glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %s", scheduledScaler.Name, err.Error())
 				}
-			}))
-		}
-		if step.Mode == "fixed" {
-			stepsCron.Schedule(s, cron.FuncJob(func() {
-				autoscaler, err = computeService.Autoscalers.Get(projectId, zone, scheduledScaler.Spec.Target.Name).Do()
-				autoscaler.AutoscalingPolicy.MaxNumReplicas = int64(*step.Replicas)
-				autoscaler.AutoscalingPolicy.MinNumReplicas = int64(*step.Replicas)
-				_, err := computeService.Autoscalers.Update(projectId, zone, autoscaler).Do()
-				if err != nil {
-					glog.Infof("FAILED TO UPDATE IG AUTOSCALER: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
-				} else {
-					ssCopy.Status.Mode = step.Mode
-					ssCopy.Status.MinReplicas = *step.Replicas
-					ssCopy.Status.MaxReplicas = *step.Replicas
-					_, err := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ssCopy)
-					if err != nil {
-						glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %s", scheduledScaler.Name, err.Error())
-					}
-					glog.Infof("SETTING RANGE IG SCALER: %s -> %s - %d", scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *step.Replicas)
-				}
-			}))
-		}
+				glog.Infof("SETTING RANGE IG SCALER: %s -> %s - %d/%d", scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *min, *max)
+			}
+		})
 	}
 
-	stepsCron.Start()
+	scalingcron.Start(stepsCron)
 	c.scheduledScalerTargets = append(c.scheduledScalerTargets, ScheduledScalerTarget{scheduledScaler.Spec.Target.Name, scheduledScaler.Spec.Target.Type, stepsCron})
 	glog.Infof("SCHEDULED SCALER CREATED: %s -> %s", scheduledScaler.Name, scheduledScaler.Spec.Target.Name)
 }
