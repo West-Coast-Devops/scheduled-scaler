@@ -25,8 +25,9 @@ metadata:
 spec:
   timeZone: America/Los_Angeles
   target:
-    type: hpa
+    kind: HorizontalPodAutoscaler
     name: my-hpa
+    apiVersion: autoscaling/v1
   steps:
   #run at 5:30am PST
   - runat: '0 30 5 * * *'
@@ -43,8 +44,9 @@ metadata:
 spec:
   timeZone: America/Los_Angeles
   target:
-    type: ig
+    kind: InstanceGroup
     name: my-instance-group-name
+    apiVersion: compute/v1
   steps:
   #run at 5:30am PST
   - runat: '0 30 5 * * *'
