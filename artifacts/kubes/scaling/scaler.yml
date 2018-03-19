@@ -4,7 +4,7 @@ metadata:
   name: my-scheduled-scaler-1
 spec:
   target:
-    kind: hpa
+    kind: HorizontalPodAutoscaler
     name: my-hpa-1
     apiVersion: autoscaling/v1
   steps:
