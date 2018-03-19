@@ -2,6 +2,22 @@
 
 In order to use the ScheduledScaler you will need to install the CRD and deploy the Scaling Controller into your Kubernetes cluster.
 
+
+### Requirements
+
+* Kubernetes Version: 1.7+
+* Kubernetes Cluster Settings:
+    * "Legacy authorization": "Enabled"
+
+
+### Tested Environments
+
+* Google Kubernetes Engine
+    * Kubernetes Version: 1.9.3-gke.0
+    * Docker Version: 1.12.5
+    * Golang Version: 1.9.4
+
+
 ### Getting Started
 
 1. Clone this repo
