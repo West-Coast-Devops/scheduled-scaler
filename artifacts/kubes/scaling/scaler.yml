@@ -9,7 +9,7 @@ spec:
     apiVersion: autoscaling/v1
   steps:
   #run at 5:30 UTC
-  - runat: '0 40 14 * * *'
+  - runat: '0 30 5 * * *'
     mode: range
     minReplicas: 1
     maxReplicas: 5
