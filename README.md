@@ -4,19 +4,25 @@ In order to use the ScheduledScaler you will need to install the CRD and deploy 
 
 ### Getting Started
 
-1. Install the CRD
+1. Clone this repo
+    ```
+    mkdir -p $GOPATH/src/k8s.restdev.com
+    git clone https://github.com/k8s-restdev/scheduled-scaler.git $GOPATH/src/k8s.restdev.com/operators
+    cd $GOPATH/src/k8s.restdev.com/operators
+    ```    
+2. Install the CRD
     ```
     kubectl create -f ./artifacts/kubes/scaling/crd.yml
     ```
-2. Install godeps
+3. Install godeps
     ```
     godep restore
     ```
-3. Build the docker image
+4. Build the docker image
     ```
     ./make scaling [PROJECT]
     ```
-4. Deploy the docker image
+5. Deploy the docker image
     ```
     ./deploygke [IMAGE] scaling [PROJECT_NAME]
     ```
