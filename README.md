@@ -3,15 +3,24 @@
 In order to use the ScheduledScaler you will need to install the CRD and deploy the Scaling Controller into your Kubernetes cluster.
 
 ### Getting Started
+
 1. Install the CRD
-```
-kubectl create -f ./artifacts/kubes/scaling/crd.yml
-```
-2. Build the docker Image
-	a. Install godeps (`godep restore`)
-	b. Build the image (`./make scaling [PROJECT]`)
-3. Deploy the image (`./deploygke [IMAGE] scaling [PROJECT_NAME]`)
-	a. *Note: The deploygke script using kubernodes, you may manually deploy using the file in ./artifacts/kubes/scaling/deployment.yml if you prefer* 
+    ```
+    kubectl create -f ./artifacts/kubes/scaling/crd.yml
+    ```
+2. Install godeps
+    ```
+    godep restore
+    ```
+3. Build the docker image
+    ```
+    ./make scaling [PROJECT]
+    ```
+4. Deploy the docker image
+    ```
+    ./deploygke [IMAGE] scaling [PROJECT_NAME]
+    ```
+    *Note: The deploygke script is using kubernodes. You may manually deploy using the file in ./artifacts/kubes/scaling/deployment.yml, if you prefer.* 
 
 Now that you have all the resources required in your cluster you can begin creating ScheduledScalers.
 
