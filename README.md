@@ -2,16 +2,47 @@
 
 In order to use the ScheduledScaler you will need to install the CRD and deploy the Scaling Controller into your Kubernetes cluster.
 
+
+### Requirements
+
+* Kubernetes Version: 1.7+
+* Kubernetes Cluster Settings:
+    * "Legacy authorization": "Enabled"
+
+
+### Tested Environments
+
+* Google Kubernetes Engine
+    * Kubernetes Version: 1.9.3-gke.0
+    * Docker Version: 1.12.5
+    * Golang Version: 1.9.4
+
+
 ### Getting Started
-1. Install the CRD
-```
-kubectl create -f ./artifacts/kubes/scaling/crd.yml
-```
-2. Build the docker Image
-	a. Install godeps (`godep restore`)
-	b. Build the image (`./make scaling [PROJECT]`)
-3. Deploy the image (`./deploygke [IMAGE] scaling [PROJECT_NAME]`)
-	a. *Note: The deploygke script using kubernodes, you may manually deploy using the file in ./artifacts/kubes/scaling/deployment.yml if you prefer* 
+
+1. Clone this repo
+    ```
+    mkdir -p $GOPATH/src/k8s.restdev.com
+    git clone https://github.com/k8s-restdev/scheduled-scaler.git $GOPATH/src/k8s.restdev.com/operators
+    cd $GOPATH/src/k8s.restdev.com/operators
+    ```    
+2. Install the CRD
+    ```
+    kubectl create -f ./artifacts/kubes/scaling/crd.yml
+    ```
+3. Install godeps
+    ```
+    godep restore
+    ```
+4. Build the docker image
+    ```
+    ./make scaling [PROJECT]
+    ```
+5. Deploy the docker image
+    ```
+    ./deploygke [IMAGE] scaling [PROJECT_NAME]
+    ```
+    *Note: The deploygke script is using [kubernodes](https://github.com/ericuldall/kubernodes). You may manually deploy using the file in ./artifacts/kubes/scaling/deployment.yml, if you prefer.* 
 
 Now that you have all the resources required in your cluster you can begin creating ScheduledScalers.
 
