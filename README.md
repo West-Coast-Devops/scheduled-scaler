@@ -20,7 +20,7 @@ In order to use the ScheduledScaler you will need to install the CRD and deploy 
     ```
     ./deploygke [IMAGE] scaling [PROJECT_NAME]
     ```
-    *Note: The deploygke script is using kubernodes. You may manually deploy using the file in ./artifacts/kubes/scaling/deployment.yml, if you prefer.* 
+    *Note: The deploygke script is using [kubernodes](https://github.com/ericuldall/kubernodes). You may manually deploy using the file in ./artifacts/kubes/scaling/deployment.yml, if you prefer.* 
 
 Now that you have all the resources required in your cluster you can begin creating ScheduledScalers.
 
