@@ -1,0 +1,24 @@
+1. scheduled-scaler controller deployed.
+  
+  Check the scheduled-scaler logs
+    export POD=$(kubectl get pods -l app={{ template "scheduled-scaler.fullname" . }} --namespace {{ .Release.Namespace }} --output name)
+    kubectl logs $POD --namespace={{ .Release.Namespace }}
+
+2. Create scheduled-scalers targeting HPA or IG, for example:
+
+    apiVersion: "scaling.k8s.restdev.com/v1alpha1"
+    kind: ScheduledScaler
+    metadata:
+      name: my-test
+    spec:
+      timeZone: Asia/Singapore
+      target:
+        kind: HorizontalPodAutoscaler
+        name: test
+        apiVersion: autoscaling/v1
+      steps:
+      #run at 13:05 GMT+8
+      - runat: '0 5 13 * * *'
+        mode: range
+        minReplicas: 3
+        maxReplicas: 5
