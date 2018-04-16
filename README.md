@@ -47,7 +47,11 @@ In order to use the ScheduledScaler you will need to install the CRD and deploy 
 Now that you have all the resources required in your cluster you can begin creating ScheduledScalers.
 
 ### Scheduled Scaler Spec
+
+Note: This controller uses the following [Cron Expression Format](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format)
+
 **HPA**
+
 ```
 apiVersion: "scaling.k8s.restdev.com/v1alpha1"
 kind: ScheduledScaler
@@ -66,7 +70,9 @@ spec:
     minReplicas: 1
     maxReplicas: 5
 ```
+
 **Instance Group**
+
 ```
 apiVersion: "scaling.k8s.restdev.com/v1alpha1"
 kind: ScheduledScaler
@@ -87,6 +93,7 @@ spec:
 As you'll see above you can target either instance groups or hpa, but all the other options are the same.
 
 ### Options
+
 | Option | Description | Required |
 |--|--|--|
 | spec.timeZone | Timezone to run crons in | False |
