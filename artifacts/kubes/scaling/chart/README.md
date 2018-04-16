@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This chart bootstraps an scheduled-scaler controller and allows the deployment of `ScheduledScaler` resources to your cluster.
+This chart bootstraps a scheduled-scaler controller and allows the deployment of `ScheduledScaler` resources to your cluster.
 
 For more information read [scheduled-scaler overview](http://k8s.restdev.com/p/scheduled-scaler.html)
 
