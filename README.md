@@ -34,15 +34,55 @@ In order to use the ScheduledScaler you will need to install the CRD and deploy 
     ```
     godep restore
     ```
-4. Build the docker image
-    ```
-    ./make scaling [PROJECT]
-    ```
-5. Deploy the docker image
-    ```
-    ./deploygke [IMAGE] scaling [PROJECT_NAME]
-    ```
-    *Note: The deploygke script is using [kubernodes](https://github.com/ericuldall/kubernodes). You may manually deploy using the file in ./artifacts/kubes/scaling/deployment.yml, if you prefer.* 
+4. Once you have the repo installed on your local dev you can test, build, push and deploy using `make` _(see below)_
+
+> **Note**: If you are just looking for a prebuilt image you can find the latest build [here](https://hub.docker.com/r/k8srestdev/scaling/).
+> Just add that image tag to the deployment yml in the artificats dir and apply to your `kube-system` namespace to get up and running without doing a fresh build :D
+
+
+### Using Make
+The `Makefile` provides the following steps:
+1. test - Run go unit tests
+2. build - Build the go bin file and docker image locally
+3. push - Push the built docker image to gcr (or another repository of your choice)
+4. deploy - Deploy the updated image to your Kubernetes cluster
+
+Each of these steps can be run in a single pass or can be used individually.
+
+**Examples**
+
+- Do all the things (kubectl)
+```
+# This example will test, build, push and deploy using kubectl's currently configured cluster
+make OPERATOR=scaling PROJECT_ID=my_project_id
+```
+
+- Do all the things (kubernodes)
+```
+# This example will test, build, push and deploy using kubernodes
+make OPERATOR=scaling PROJECT_ID=my_project_id DEPLOYBIN=kn KN_PROJECT_ID=my_kubernodes_project_id
+```
+> **Note:** You only need to add `KN_PROJECT_ID` if it differs from `PROJECT_ID` 
+
+- Just build the image
+```
+make build OPERATOR=scaling PROJECT_ID=my_project_id
+``` 
+
+- Just push any image
+```
+make push IMAGE=myrepo/myimage:mytag
+```
+
+- Just deploy any image (kubectl)
+```
+make deploy IMAGE=myrepo/myimage:mytag
+```
+
+- Just deploy any image (kubernodes)
+```
+make deploy IMAGE=myrepo/myimage:mytag DEPLOYBIN=kn KN_PROJECT_ID=my_kubernodes_project_id
+``` 
 
 Now that you have all the resources required in your cluster you can begin creating ScheduledScalers.
 
