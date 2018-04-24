@@ -2,39 +2,48 @@
 
 In order to use the ScheduledScaler you will need to install the CRD and deploy the Scaling Controller into your Kubernetes cluster.
 
-
-### Requirements
+## Requirements
 
 * Kubernetes Version: 1.7+
 * Kubernetes Cluster Settings:
-    * "Legacy authorization": "Enabled"
+  * "Legacy authorization": "Enabled"
 
-
-### Tested Environments
+## Tested Environments
 
 * Google Kubernetes Engine
-    * Kubernetes Version: 1.9.3-gke.0
-    * Docker Version: 1.12.5
-    * Golang Version: 1.9.4
+  * Kubernetes Version: 1.9.3-gke.0, 1.7.15
+  * Docker Version: 1.12.5
+  * Golang Version: 1.9.4
 
+## Getting Started
 
-### Getting Started
+**Clone this repo**
+```
+mkdir -p $GOPATH/src/k8s.restdev.com && \
+git clone https://github.com/k8s-restdev/scheduled-scaler.git $GOPATH/src/k8s.restdev.com/operators && \
+cd $GOPATH/src/k8s.restdev.com/operators
+```  
+    
+**Install using Helm Chart**
+```bash
+helm install artifacts/kubes/scaling/chart --name scheduled-scaler
+```
 
-1. Clone this repo
-    ```
-    mkdir -p $GOPATH/src/k8s.restdev.com
-    git clone https://github.com/k8s-restdev/scheduled-scaler.git $GOPATH/src/k8s.restdev.com/operators
-    cd $GOPATH/src/k8s.restdev.com/operators
-    ```    
-2. Install the CRD
-    ```
-    kubectl create -f ./artifacts/kubes/scaling/crd.yml
-    ```
-3. Install godeps
-    ```
-    godep restore
-    ```
-4. Once you have the repo installed on your local dev you can test, build, push and deploy using `make` _(see below)_
+> **Note**: This uses the image stored at https://hub.docker.com/r/k8srestdev/scaling by default.
+   
+[See chart README](artifacts/kubes/scaling/chart) for detailed configuration options 
+
+**Installation without Helm (and compiling binary yourself):**
+
+1. Install the CRD
+```
+kubectl create -f ./artifacts/kubes/scaling/crd.yml
+```
+2. Install godeps
+```
+godep restore
+```
+3. Once you have the repo installed on your local dev you can test, build, push and deploy using `make`
 
 > **Note**: If you are just looking for a prebuilt image you can find the latest build [here](https://hub.docker.com/r/k8srestdev/scaling/).
 > Just add that image tag to the deployment yml in the artificats dir and apply to your `kube-system` namespace to get up and running without doing a fresh build :D
@@ -86,9 +95,13 @@ make deploy IMAGE=myrepo/myimage:mytag DEPLOYBIN=kn KN_PROJECT_ID=my_kubernodes_
 
 Now that you have all the resources required in your cluster you can begin creating ScheduledScalers.
 
-### Scheduled Scaler Spec
-**HPA**
-```
+## Scheduled Scaler Spec
+
+> **Note:** This controller uses the following [Cron Expression Format](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format)
+
+### HPA
+
+```yaml
 apiVersion: "scaling.k8s.restdev.com/v1alpha1"
 kind: ScheduledScaler
 metadata:
@@ -106,8 +119,10 @@ spec:
     minReplicas: 1
     maxReplicas: 5
 ```
-**Instance Group**
-```
+
+### Instance Group
+
+```yaml
 apiVersion: "scaling.k8s.restdev.com/v1alpha1"
 kind: ScheduledScaler
 metadata:
@@ -124,9 +139,11 @@ spec:
     mode: fixed
     replicas: 3
 ```
-As you'll see above you can target either instance groups or hpa, but all the other options are the same.
 
-### Options
+As you'll see above, you can target either instance groups (if you are on GKE) or hpa, but all the other options are the same.
+
+## Options
+
 | Option | Description | Required |
 |--|--|--|
 | spec.timeZone | Timezone to run crons in | False |
@@ -139,7 +156,6 @@ As you'll see above you can target either instance groups or hpa, but all the ot
 | spec.steps[].replicas | Defined if mode is 'fixed' | False
 | spec.steps[].minReplicas | Defined if mode is 'range' | False
 | spec.steps[].maxReplicas | Defined if mode is 'range' | False
-
 
 For more details on how this add-on can be used please follow the link below:
 [Learn More...](http://k8s.restdev.com/p/scheduled-scaler.html)

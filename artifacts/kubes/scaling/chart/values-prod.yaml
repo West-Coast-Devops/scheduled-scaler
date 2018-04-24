@@ -1,0 +1,9 @@
+# image:
+#  tag: master
+resources:
+  limits:
+   cpu: 200m
+   memory: 50Mi
+  requests:
+   cpu: 200m
+   memory: 50Mi

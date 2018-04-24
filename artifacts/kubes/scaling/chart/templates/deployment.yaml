@@ -1,0 +1,43 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "scheduled-scaler.fullname" . }}
+  labels: {{ include "scheduled-scaler.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "scheduled-scaler.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels: {{ include "scheduled-scaler.labels" . | indent 8 }}
+    spec:
+      {{- if .Values.rbac.create }}
+      serviceAccount: {{ template "scheduled-scaler.fullname" . }}
+      {{- end }}
+      volumes:
+        - name: ssl-certs
+          hostPath:
+            path: {{ .Values.sslCerts.hostPath }}
+      containers:
+        - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          name: {{ .Chart.Name }}
+          command: ["/bin/k8s-restdev-scaling"]
+          volumeMounts:
+          - name: ssl-certs
+            mountPath: /etc/ssl/certs
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
