@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: quay.io/honestbee/scheduled-scaler
-  tag: latest
+  repository: k8srestdev/scaling
+  tag: 0.0.1
   pullPolicy: Always
 sslCerts:
   hostPath: "/etc/ssl/certs"
