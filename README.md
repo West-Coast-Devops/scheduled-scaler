@@ -17,58 +17,87 @@ In order to use the ScheduledScaler you will need to install the CRD and deploy 
 
 ## Getting Started
 
-1. Clone this repo
+**Clone this repo**
+```
+mkdir -p $GOPATH/src/k8s.restdev.com && \
+git clone https://github.com/k8s-restdev/scheduled-scaler.git $GOPATH/src/k8s.restdev.com/operators && \
+cd $GOPATH/src/k8s.restdev.com/operators
+```  
+    
+**Install using Helm Chart**
+```bash
+helm install artifacts/kubes/scaling/chart --name scheduled-scaler
+```
 
-   ```bash
-   mkdir -p $GOPATH/src/k8s.restdev.com
-   git clone https://github.com/k8s-restdev/scheduled-scaler.git $GOPATH/src/k8s.restdev.com/operators
-   cd $GOPATH/src/k8s.restdev.com/operators
-   ```
-
-1. Install using Helm Chart
-
-   ```bash
-   helm install artifacts/kubes/scaling/chart --name scheduled-scaler
-   ```
-
-   **Note**: This uses the image stored at https://quay.io/repository/honestbee/scheduled-scaler by default.
+> **Note**: This uses the image stored at https://hub.docker.com/r/k8srestdev/scaling by default.
    
-   [see Chart README](artifacts/kubes/scaling/chart)
-   for detailed configuration options 
+[See chart README](artifacts/kubes/scaling/chart) for detailed configuration options 
 
-Installation without Helm (and compiling binary yourself):
+**Installation without Helm (and compiling binary yourself):**
 
 1. Install the CRD
+```
+kubectl create -f ./artifacts/kubes/scaling/crd.yml
+```
+2. Install godeps
+```
+godep restore
+```
+3. Once you have the repo installed on your local dev you can test, build, push and deploy using `make`
 
-   ```bash
-   kubectl create -f ./artifacts/kubes/scaling/crd.yml
-   ```
+> **Note**: If you are just looking for a prebuilt image you can find the latest build [here](https://hub.docker.com/r/k8srestdev/scaling/).
+> Just add that image tag to the deployment yml in the artificats dir and apply to your `kube-system` namespace to get up and running without doing a fresh build :D
 
-1. Install godeps
 
-   ```bash
-   godep restore
-   ```
+### Using Make
+The `Makefile` provides the following steps:
+1. test - Run go unit tests
+2. build - Build the go bin file and docker image locally
+3. push - Push the built docker image to gcr (or another repository of your choice)
+4. deploy - Deploy the updated image to your Kubernetes cluster
 
-1. Build the docker image
+Each of these steps can be run in a single pass or can be used individually.
 
-   ```bash
-   ./make scaling [PROJECT]
-   ```
+**Examples**
 
-1. Deploy the docker image
+- Do all the things (kubectl)
+```
+# This example will test, build, push and deploy using kubectl's currently configured cluster
+make OPERATOR=scaling PROJECT_ID=my_project_id
+```
 
-   ```bash
-   ./deploygke [IMAGE] scaling [PROJECT_NAME]
-   ```
+- Do all the things (kubernodes)
+```
+# This example will test, build, push and deploy using kubernodes
+make OPERATOR=scaling PROJECT_ID=my_project_id DEPLOYBIN=kn KN_PROJECT_ID=my_kubernodes_project_id
+```
+> **Note:** You only need to add `KN_PROJECT_ID` if it differs from `PROJECT_ID` 
 
-   *Note: The deploygke script is using [kubernodes](https://github.com/ericuldall/kubernodes). You may manually deploy using the file in ./artifacts/kubes/scaling/deployment.yml, if you prefer.*
+- Just build the image
+```
+make build OPERATOR=scaling PROJECT_ID=my_project_id
+``` 
+
+- Just push any image
+```
+make push IMAGE=myrepo/myimage:mytag
+```
+
+- Just deploy any image (kubectl)
+```
+make deploy IMAGE=myrepo/myimage:mytag
+```
+
+- Just deploy any image (kubernodes)
+```
+make deploy IMAGE=myrepo/myimage:mytag DEPLOYBIN=kn KN_PROJECT_ID=my_kubernodes_project_id
+``` 
 
 Now that you have all the resources required in your cluster you can begin creating ScheduledScalers.
 
 ## Scheduled Scaler Spec
 
-Note: This controller uses the following [Cron Expression Format](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format)
+> **Note:** This controller uses the following [Cron Expression Format](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format)
 
 ### HPA
 
