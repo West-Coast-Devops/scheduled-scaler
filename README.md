@@ -85,12 +85,12 @@ make push IMAGE=myrepo/myimage:mytag
 
 - Just deploy any image (kubectl)
 ```
-make deploy IMAGE=myrepo/myimage:mytag
+make deploy OPERATOR=scaling IMAGE=myrepo/myimage:mytag
 ```
 
 - Just deploy any image (kubernodes)
 ```
-make deploy IMAGE=myrepo/myimage:mytag DEPLOYBIN=kn KN_PROJECT_ID=my_kubernodes_project_id
+make deploy OPERATOR=scaling IMAGE=myrepo/myimage:mytag DEPLOYBIN=kn KN_PROJECT_ID=my_kubernodes_project_id
 ``` 
 
 Now that you have all the resources required in your cluster you can begin creating ScheduledScalers.
