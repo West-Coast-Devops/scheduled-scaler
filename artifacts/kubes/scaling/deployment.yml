@@ -15,9 +15,10 @@
         labels:
           name: "k8s-restdev-scaling"
       spec:
+        serviceAccount: scheduled-scaler
         containers:
           -
-            image: "[IMAGE]"
+            image: "k8srestdev/scaling:0.0.1"
             name: "k8s-restdev-scaling"
             command: ["/bin/k8s-restdev-scaling"]
             volumeMounts:
