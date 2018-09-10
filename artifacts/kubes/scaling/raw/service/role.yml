@@ -1,0 +1,20 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: scheduled-scaler
+rules:
+   # Allow scheduled-scaler controller full control on its CRD's group
+- apiGroups: ["scaling.k8s.restdev.com"]
+  resources: ["*"]
+  verbs: ["*"]
+  nonResourceURLs: []
+  # Allow scheduled-scaler controller to list, get, update hpa in non-core APIs
+- apiGroups: ["autoscaling"]
+  resources: ["horizontalpodautoscalers", "horizontalpodautoscalers/status"]
+  verbs: ["list", "get", "update"]
+  nonResourceURLs: []
+  # Allow scheduled-scaler controller to list, get, update hpa in extensions API
+- apiGroups: ["extensions"]
+  resources: ["horizontalpodautoscalers", "horizontalpodautoscalers/status"]
+  verbs: ["list", "get", "update"]
+  nonResourceURLs: []

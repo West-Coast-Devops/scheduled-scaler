@@ -1,14 +1,16 @@
 apiVersion: "scaling.k8s.restdev.com/v1alpha1"
 kind: ScheduledScaler
 metadata:
-  name: my-scheduled-scaler-1
+  name: ((stack))-((app))
+  namespace: ((environment))
 spec:
+  timeZone: America/New_York
   target:
     kind: HorizontalPodAutoscaler
-    name: my-hpa-1
+    name: ((stack))-((app))
     apiVersion: autoscaling/v1
   steps:
-  #run at 5:30 UTC
+  #run at 5:30 EST
   - runat: '0 30 5 * * *'
     mode: range
     minReplicas: 1

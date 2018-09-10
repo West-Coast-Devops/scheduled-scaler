@@ -2,6 +2,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: {{ template "scheduled-scaler.fullname" . }}
+  namespace: kube-system
   labels: {{ include "scheduled-scaler.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
