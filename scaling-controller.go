@@ -10,6 +10,7 @@ import (
 	"github.com/robfig/cron"
 
 	"k8s.io/client-go/kubernetes"
+	apierr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/clientcmd"
@@ -90,7 +91,9 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(obj interface{}) {
 	}
 	hpaClient := c.kubeClient.AutoscalingV1().HorizontalPodAutoscalers(scheduledScaler.Namespace)
 	hpa, err := hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
-	if err != nil {
+	if apierr.IsNotFound(err) {
+		glog.Errorf("FAILED TO UPDATE HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
+	} else if err != nil {
 		panic(err.Error())
 	}
 	ssCopy := ss.DeepCopy()
@@ -100,24 +103,28 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(obj interface{}) {
 		min, max := scalingstep.Parse(step)
 		scalingcron.Push(stepsCron, step.Runat, func() {
 			hpa, err = hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
-			if err != nil {
+			if apierr.IsNotFound(err) {
+				glog.Errorf("FAILED TO UPDATE HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
+			} else if err != nil {
 				panic(err.Error())
-			}
-			hpa.Spec.MinReplicas = min
-			hpa.Spec.MaxReplicas = *max
-			_, err := hpaClient.Update(hpa)
-			if err != nil {
-				glog.Infof("FAILED TO UPDATE HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
 			} else {
-				ssCopy.Status.Mode = step.Mode
-				ssCopy.Status.MinReplicas = *min
-				ssCopy.Status.MaxReplicas = *max
-				_, err := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ssCopy)
+				hpa.Spec.MinReplicas = min
+				hpa.Spec.MaxReplicas = *max
+				_, err := hpaClient.Update(hpa)
 				if err != nil {
-					glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %s", scheduledScaler.Name, err.Error())
-				}
-				glog.Infof("SETTING RANGE SCALER: %s/%s -> %s - %d:%d", scheduledScaler.Namespace, scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *min, *max)
+					glog.Infof("FAILED TO UPDATE HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
+				} else {
+					ssCopy.Status.Mode = step.Mode
+					ssCopy.Status.MinReplicas = *min
+					ssCopy.Status.MaxReplicas = *max
+					_, err := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ssCopy)
+					if err != nil {
+						glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %s", scheduledScaler.Name, err.Error())
+					}
+					glog.Infof("SETTING RANGE SCALER: %s/%s -> %s - %d:%d", scheduledScaler.Namespace, scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *min, *max)
+				}				
 			}
+
 		})
 	}
 	scalingcron.Start(stepsCron)
