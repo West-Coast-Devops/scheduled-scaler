@@ -26,18 +26,18 @@ $ helm delete --purge scheduled-scaler
 
 ## Configuration
 
-| Parameter                               | Description                                                   | Default                              |
-|-----------------------------------------|---------------------------------------------------------------|--------------------------------------|
-| `image.repository`                      | Scheduled scaler container image                              | `quay.io/honestbee/scheduled-scaler` |
-| `image.tag`                             | Scheduled scaler container image tag                          | `latest`                             |
-| `image.pullPolicy`                      | Scheduled scaler container image pull policy                  | `Always`                             |
-| `replicaCount`                          | Number of scheduled-scaler replicas to create (only 1 is supported) | `1`                            |
-| `sslCerts.hostPath`                     | TLS certs for secure connections                              | `/etc/ssl/certs`                     |
-| `rbac.create`                           | install required RBAC service account, roles and rolebindings | `true`                               |
-| `resources`                             | Resource configuration for Scheduled scaler controller pod    | `{}`                                 |
-| `nodeSelector`                          | Node labels for Scheduled scaler controller pod assignment    | `{}`                                 |
-| `tolerations`                           | Tolerations for Scheduled scaler controller pod assignment    | `[]`                                 |
-| `affinity`                              | Affinity Rules for Scheduled scaler controller pod assignment | `[]`                                 |
+| Parameter                               | Description                                                         | Default                              |
+|-----------------------------------------|---------------------------------------------------------------------|--------------------------------------|
+| `image.repository`                      | Scheduled scaler container image                                    | `k8srestdev/scaling`                 |
+| `image.tag`                             | Scheduled scaler container image tag                                | `0.0.2`                              |
+| `image.pullPolicy`                      | Scheduled scaler container image pull policy                        | `Always`                             |
+| `replicaCount`                          | Number of scheduled-scaler replicas to create (only 1 is supported) | `1`                                  |
+| `sslCerts.hostPath`                     | TLS certs for secure connections                                    | `/etc/ssl/certs`                     |
+| `rbac.create`                           | install required RBAC service account, roles and rolebindings       | `true`                               |
+| `resources`                             | Resource configuration for Scheduled scaler controller pod          | `{}`                                 |
+| `nodeSelector`                          | Node labels for Scheduled scaler controller pod assignment          | `{}`                                 |
+| `tolerations`                           | Tolerations for Scheduled scaler controller pod assignment          | `[]`                                 |
+| `affinity`                              | Affinity Rules for Scheduled scaler controller pod assignment       | `[]`                                 |
 
 ## RBAC
 
