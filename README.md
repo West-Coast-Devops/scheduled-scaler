@@ -39,11 +39,7 @@ helm install artifacts/kubes/scaling/chart --name scheduled-scaler
 ```
 kubectl create -f ./artifacts/kubes/scaling/crd.yml
 ```
-2. Install godeps
-```
-godep restore
-```
-3. Once you have the repo installed on your local dev you can test, build, push and deploy using `make`
+2. Once you have the repo installed on your local dev you can test, build, push and deploy using `make`
 
 > **Note**: If you are just looking for a prebuilt image you can find the latest build [here](https://hub.docker.com/r/k8srestdev/scaling/).
 > Just add that image tag to the deployment yml in the artificats dir and apply to your `kube-system` namespace to get up and running without doing a fresh build :D
