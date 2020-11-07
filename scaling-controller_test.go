@@ -42,6 +42,18 @@ func Test_validateScheduledScaler(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		{
+			name: `valid date is ok ("0 0 6 * * SAT")`,
+			scheduledScaler: &scalingv1alpha1.ScheduledScaler{
+				Spec: scalingv1alpha1.ScheduledScalerSpec{
+					Steps: []scalingv1alpha1.ScheduledScalerStep{
+						{
+							Runat: "0 0 6 * * SAT",
+						},
+					},
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
