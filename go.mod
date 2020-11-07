@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.1.1-0.20160913182117-3b1ae45394a2
 	github.com/PuerkitoBio/purell v1.0.0
 	github.com/PuerkitoBio/urlesc v0.0.0-20160726150825-5bd2802263f2
-	github.com/davecgh/go-spew v1.1.1-0.20170626231645-782f4967f2dc
+	github.com/davecgh/go-spew v1.1.1
 	github.com/emicklei/go-restful v1.1.4-0.20170410110728-ff4f55a20633
 	github.com/ghodss/yaml v0.0.0-20150909031657-73d445a93680
 	github.com/go-openapi/jsonpointer v0.0.0-20160704185906-46af16f9f7b1
@@ -29,11 +29,13 @@ require (
 	github.com/peterbourgon/diskv v2.0.1+incompatible
 	github.com/robfig/cron v1.0.1-0.20171101201047-2315d5715e36
 	github.com/spf13/pflag v0.0.0-20170130214245-9ff6c6923cff
-	golang.org/x/crypto v0.0.0-20170825220121-81e90905daef
-	golang.org/x/net v0.0.0-20170809000501-1c05540f6879
+	github.com/stretchr/testify v1.6.1
+	go.uber.org/multierr v1.5.0
+	golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529
+	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
 	golang.org/x/oauth2 v0.0.0-20170412232759-a6bd8cefa181
-	golang.org/x/sys v0.0.0-20171031081856-95c657629925
-	golang.org/x/text v0.0.0-20170810154203-b19bf474d317
+	golang.org/x/sys v0.0.0-20190412213103-97732733099d
+	golang.org/x/text v0.3.0
 	google.golang.org/api v0.0.0-20180215000618-3acc4f94acb5
 	gopkg.in/inf.v0 v0.9.0
 	gopkg.in/yaml.v2 v2.0.0-20150924142314-53feefa2559f

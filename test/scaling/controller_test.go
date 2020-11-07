@@ -1,9 +1,10 @@
 package main
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
-func NeverFail(t *testing.T) {
-	if false {
-		t.Errorf("Should never fail!")
-	}
+func TestNeverFail(t *testing.T) {
+	assert.False(t, false, "Should never fail!")
 }
