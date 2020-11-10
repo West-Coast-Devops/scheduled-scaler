@@ -3,25 +3,26 @@ package main
 import (
 	"flag"
 	"fmt"
-	"time"
+	"go.uber.org/multierr"
 	"reflect"
+	"time"
 
 	"github.com/golang/glog"
 	"github.com/robfig/cron"
 
-	"k8s.io/client-go/kubernetes"
 	apierr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/clientcmd"
-	
+
+	scalingv1alpha1 "k8s.restdev.com/operators/pkg/apis/scaling/v1alpha1"
 	clientset "k8s.restdev.com/operators/pkg/client/clientset/versioned"
 	informers "k8s.restdev.com/operators/pkg/client/informers/externalversions"
 	listers "k8s.restdev.com/operators/pkg/client/listers/scaling/v1alpha1"
-	scalingv1alpha1 "k8s.restdev.com/operators/pkg/apis/scaling/v1alpha1"
-	scalingstep "k8s.restdev.com/operators/pkg/services/scaling/step"
 	scalingcron "k8s.restdev.com/operators/pkg/services/scaling/cron"
 	scalingmetadata "k8s.restdev.com/operators/pkg/services/scaling/metadata"
+	scalingstep "k8s.restdev.com/operators/pkg/services/scaling/step"
 
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2/google"
@@ -45,9 +46,9 @@ type ScheduledScalerTarget struct {
  *
  */
 type ScheduledScalerController struct {
-	informerFactory informers.SharedInformerFactory
-	restdevClient clientset.Interface
-	kubeClient *kubernetes.Clientset
+	informerFactory        informers.SharedInformerFactory
+	restdevClient          clientset.Interface
+	kubeClient             *kubernetes.Clientset
 	scheduledScalersLister listers.ScheduledScalerLister
 	scheduledScalersSynced cache.InformerSynced
 	scheduledScalerTargets []ScheduledScalerTarget
@@ -66,6 +67,26 @@ func (c *ScheduledScalerController) Run(stopCh chan struct{}) error {
 	return nil
 }
 
+// validateScheduledScaler validates the scheduledScaler
+func validateScheduledScaler(scheduledScaler *scalingv1alpha1.ScheduledScaler) error {
+	if scheduledScaler == nil {
+		return fmt.Errorf("scheduledScaler is nil")
+	}
+	var err error
+	for _, step := range scheduledScaler.Spec.Steps {
+		schedule, stepErr := cron.Parse(step.Runat)
+		if stepErr != nil {
+			err = multierr.Append(err, fmt.Errorf("error parsing Runat %s: %w", step.Runat, stepErr))
+			continue
+		}
+		when := schedule.Next(time.Now())
+		if when.IsZero() {
+			err = multierr.Append(err, fmt.Errorf("invalid Runat %s; will never fire", step.Runat))
+		}
+	}
+	return err
+}
+
 /**
  *
  * Add methods
@@ -74,16 +95,23 @@ func (c *ScheduledScalerController) Run(stopCh chan struct{}) error {
  *
  */
 func (c *ScheduledScalerController) scheduledScalerAdd(obj interface{}) {
-	scheduledScaler := obj.(*scalingv1alpha1.ScheduledScaler)
+	scheduledScaler, ok := obj.(*scalingv1alpha1.ScheduledScaler)
+	if !ok {
+		glog.Warningf("object %T is not a *scalingv1alpha1.ScheduledScaler; will not add", obj)
+		return
+	}
+	if err := validateScheduledScaler(scheduledScaler); err != nil {
+		glog.Errorf("error validating scheduledScaler %#v: %v; will not add", scheduledScaler, err)
+		return
+	}
 	if scheduledScaler.Spec.Target.Kind == "HorizontalPodAutoscaler" {
-		c.scheduledScalerHpaCronAdd(obj)
+		c.scheduledScalerHpaCronAdd(scheduledScaler)
 	} else if scheduledScaler.Spec.Target.Kind == "InstanceGroup" {
-		c.scheduledScalerIgCronAdd(obj)
+		c.scheduledScalerIgCronAdd(scheduledScaler)
 	}
 }
 
-func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(obj interface{}) {
-	scheduledScaler := obj.(*scalingv1alpha1.ScheduledScaler)
+func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *scalingv1alpha1.ScheduledScaler) {
 	tz := scheduledScaler.Spec.TimeZone
 	ss, err := c.scheduledScalersLister.ScheduledScalers(scheduledScaler.Namespace).Get(scheduledScaler.Name)
 	if err != nil {
@@ -122,7 +150,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(obj interface{}) {
 						glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %s", scheduledScaler.Name, err.Error())
 					}
 					glog.Infof("SETTING RANGE SCALER: %s/%s -> %s - %d:%d", scheduledScaler.Namespace, scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *min, *max)
-				}				
+				}
 			}
 
 		})
@@ -132,9 +160,8 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(obj interface{}) {
 	glog.Infof("SCHEDULED SCALER CREATED: %s -> %s", scheduledScaler.Name, scheduledScaler.Spec.Target.Name)
 }
 
-func (c *ScheduledScalerController) scheduledScalerIgCronAdd(obj interface{}) {
+func (c *ScheduledScalerController) scheduledScalerIgCronAdd(scheduledScaler *scalingv1alpha1.ScheduledScaler) {
 	projectId, zone, _ := scalingmetadata.GetClusterInfo()
-	scheduledScaler := obj.(*scalingv1alpha1.ScheduledScaler)
 	tz := scheduledScaler.Spec.TimeZone
 	ss, err := c.scheduledScalersLister.ScheduledScalers(scheduledScaler.Namespace).Get(scheduledScaler.Name)
 	if err != nil {
@@ -150,7 +177,7 @@ func (c *ScheduledScalerController) scheduledScalerIgCronAdd(obj interface{}) {
 	if err != nil {
 		panic(err.Error())
 	}
-	
+
 	autoscaler, err := computeService.Autoscalers.Get(projectId, zone, scheduledScaler.Spec.Target.Name).Do()
 	if err != nil {
 		panic(err.Error())
@@ -185,7 +212,6 @@ func (c *ScheduledScalerController) scheduledScalerIgCronAdd(obj interface{}) {
 	c.scheduledScalerTargets = append(c.scheduledScalerTargets, ScheduledScalerTarget{scheduledScaler.Spec.Target.Name, scheduledScaler.Spec.Target.Kind, stepsCron})
 	glog.Infof("SCHEDULED SCALER CREATED: %s -> %s", scheduledScaler.Name, scheduledScaler.Spec.Target.Name)
 }
-
 
 /**
  *
@@ -240,7 +266,6 @@ func (c *ScheduledScalerController) scheduledScalerFindTargetKey(name string) (i
 	return -1, true
 }
 
-
 /**
  *
  * Create new instance of the Scaling Controller
@@ -256,16 +281,16 @@ func NewScheduledScalerController(
 	var scheduledScalerTargets []ScheduledScalerTarget
 
 	c := &ScheduledScalerController{
-		informerFactory: informerFactory,
-		restdevClient: restdevClient,
-		kubeClient: kubeClient,
+		informerFactory:        informerFactory,
+		restdevClient:          restdevClient,
+		kubeClient:             kubeClient,
 		scheduledScalersLister: scheduledScalersLister,
 		scheduledScalersSynced: scheduledScalerInformer.Informer().HasSynced,
 		scheduledScalerTargets: scheduledScalerTargets,
 	}
 	scheduledScalerInformer.Informer().AddEventHandler(
 		cache.ResourceEventHandlerFuncs{
-			AddFunc: c.scheduledScalerAdd,
+			AddFunc:    c.scheduledScalerAdd,
 			UpdateFunc: c.scheduledScalerUpdate,
 			DeleteFunc: c.scheduledScalerDelete,
 		},
