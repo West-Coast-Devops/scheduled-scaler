@@ -15,6 +15,7 @@ require (
 	github.com/go-openapi/swag v0.0.0-20170606142751-f3f9494671f9
 	github.com/gogo/protobuf v0.0.0-20170330071051-c0656edd0d9e
 	github.com/golang/glog v0.0.0-20141105023935-44145f04b68c
+	github.com/golang/mock v1.4.3
 	github.com/golang/protobuf v0.0.0-20171021043952-1643683e1b54
 	github.com/google/btree v0.0.0-20160524151835-7d79101e329e
 	github.com/google/gofuzz v0.0.0-20161122191042-44d81051d367

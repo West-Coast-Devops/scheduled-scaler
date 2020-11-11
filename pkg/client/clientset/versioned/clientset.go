@@ -16,9 +16,11 @@ limitations under the License.
 
 package versioned
 
+//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/$GOFILE -package mock_$GOPACKAGE
+
 import (
 	glog "github.com/golang/glog"
-	discovery "k8s.io/client-go/discovery"
+	"k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
 	scalingv1alpha1 "k8s.restdev.com/operators/pkg/client/clientset/versioned/typed/scaling/v1alpha1"
