@@ -89,13 +89,27 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			MaxReplicas: 20,
 		},
 	}
+	testSS := scalingv1alpha1.ScheduledScaler{
+		Spec: scalingv1alpha1.ScheduledScalerSpec{
+			Steps: []scalingv1alpha1.ScheduledScalerStep{
+				{
+					Mode:        "range",
+					Runat:       "0 0 6 * * SAT",
+					MinReplicas: newInt32(100),
+					MaxReplicas: newInt32(200),
+				},
+			},
+		},
+	}
 	tests := []struct {
 		name           string
 		ss             scalingv1alpha1.ScheduledScaler
-		ssGetErr       error
+		ssListerGetErr error
 		hpaGetResults  []*v1.HorizontalPodAutoscaler
 		hpaGetErrs     []error
 		hpaUpdatesErrs []error
+		ssGetResults   []*scalingv1alpha1.ScheduledScaler
+		ssGetErrs      []error
 		ssUpdateErrs   []error
 	}{
 		{
@@ -109,18 +123,7 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 		},
 		{
 			name: "SS with one spec, fails once and retries",
-			ss: scalingv1alpha1.ScheduledScaler{
-				Spec: scalingv1alpha1.ScheduledScalerSpec{
-					Steps: []scalingv1alpha1.ScheduledScalerStep{
-						{
-							Mode:        "range",
-							Runat:       "0 0 6 * * SAT",
-							MinReplicas: newInt32(100),
-							MaxReplicas: newInt32(200),
-						},
-					},
-				},
-			},
+			ss:   testSS,
 			hpaGetResults: []*v1.HorizontalPodAutoscaler{
 				testHPA,
 				testHPA,
@@ -138,21 +141,43 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			ssUpdateErrs: []error{
 				nil,
 			},
+			ssGetResults: []*scalingv1alpha1.ScheduledScaler{
+				&testSS,
+			},
+			ssGetErrs: []error{
+				nil,
+			},
+		},
+		{
+			name: "SS with one spec, fails ss update once and retries",
+			ss:   testSS,
+			hpaGetResults: []*v1.HorizontalPodAutoscaler{
+				testHPA,
+				testHPA,
+			},
+			hpaGetErrs: []error{
+				nil,
+				nil,
+			},
+			hpaUpdatesErrs: []error{
+				nil,
+			},
+			ssUpdateErrs: []error{
+				errors.NewConflict(schema.GroupResource{}, "foo", nil),
+				nil,
+			},
+			ssGetResults: []*scalingv1alpha1.ScheduledScaler{
+				&testSS,
+				&testSS,
+			},
+			ssGetErrs: []error{
+				nil,
+				nil,
+			},
 		},
 		{
 			name: "SS with one spec, fails more than maxRetries; never calls ss update",
-			ss: scalingv1alpha1.ScheduledScaler{
-				Spec: scalingv1alpha1.ScheduledScalerSpec{
-					Steps: []scalingv1alpha1.ScheduledScalerStep{
-						{
-							Mode:        "range",
-							Runat:       "0 0 6 * * SAT",
-							MinReplicas: newInt32(100),
-							MaxReplicas: newInt32(200),
-						},
-					},
-				},
-			},
+			ss:   testSS,
 			hpaGetResults: []*v1.HorizontalPodAutoscaler{
 				testHPA,
 				testHPA,
@@ -205,7 +230,7 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			mockNsLister := mock_v1alpha1.NewMockScheduledScalerNamespaceLister(ctrl)
 			mockNsLister.EXPECT().
 				Get(tt.ss.Name).
-				Return(&tt.ss, tt.ssGetErr)
+				Return(&tt.ss, tt.ssListerGetErr)
 			mockLister := mock_v1alpha1.NewMockScheduledScalerLister(ctrl)
 			mockLister.EXPECT().
 				ScheduledScalers(tt.ss.Namespace).
@@ -241,6 +266,17 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 				Return(mockAutoscaling)
 
 			mockScheduledScalerInterface := mock_v1alpha12.NewMockScheduledScalerInterface(ctrl)
+			ssGetIndex := 0
+			mockScheduledScalerInterface.EXPECT().
+				Get(gomock.Any(), gomock.Any()).
+				Times(len(tt.ssGetResults)).
+				DoAndReturn(func(name string, options metav1.GetOptions) (*scalingv1alpha1.ScheduledScaler, error) {
+					result := tt.ssGetResults[ssGetIndex]
+					err := tt.ssGetErrs[ssGetIndex]
+					ssGetIndex++
+					return result, err
+				})
+
 			ssUpdateIndex := 0
 			mockScheduledScalerInterface.EXPECT().
 				Update(gomock.Any()).
@@ -253,12 +289,10 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			mockScalingV1alpha1Interface := mock_v1alpha12.NewMockScalingV1alpha1Interface(ctrl)
 			mockScalingV1alpha1Interface.EXPECT().
 				ScheduledScalers(tt.ss.Namespace).
-				MaxTimes(len(tt.ss.Spec.Steps)).
 				Return(mockScheduledScalerInterface)
 			mockRestdevClient := mock_versioned.NewMockInterface(ctrl)
 			mockRestdevClient.EXPECT().
 				ScalingV1alpha1().
-				MaxTimes(len(tt.ss.Spec.Steps)).
 				Return(mockScalingV1alpha1Interface)
 			c := &ScheduledScalerController{
 				cronProxy:              mockCronProxy,

@@ -132,6 +132,8 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 	if err != nil {
 		panic(err.Error())
 	}
+
+	ssClient := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace)
 	// TODO: is this really needed?
 	ssCopy := ss.DeepCopy()
 	stepsCron := c.cronProxy.Create(tz)
@@ -177,11 +179,15 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 				glog.Errorf("FAILED TO UPDATE SS: %s after %d retries", scheduledScaler.Name, ssRetries)
 				return
 			}
-			ss, err := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Get(scheduledScaler.Name, metav1.GetOptions{})
+			ss, err := ssClient.Get(scheduledScaler.Name, metav1.GetOptions{})
+			if err != nil {
+				glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %v", scheduledScaler.Name, err)
+				return
+			}
 			ss.Status.Mode = step.Mode
 			ss.Status.MinReplicas = *min
 			ss.Status.MaxReplicas = *max
-			_, err = c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ss)
+			_, err = ssClient.Update(ss)
 			if apierr.IsConflict(err) {
 				glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %v; retrying", scheduledScaler.Name, err)
 				ssRetries++
