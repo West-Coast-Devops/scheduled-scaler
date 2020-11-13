@@ -121,16 +121,13 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 	ss, err := c.scheduledScalersLister.ScheduledScalers(scheduledScaler.Namespace).Get(scheduledScaler.Name)
 	if err != nil {
 		glog.Errorf("FAILED TO GET SCHEDULED SCALER: %s - %v", scheduledScaler.Spec.Target.Name, err)
-		panic(err.Error())
+		return
 	}
 	hpaClient := c.kubeClient.AutoscalingV1().HorizontalPodAutoscalers(scheduledScaler.Namespace)
 	hpa, err := hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
-	if apierr.IsNotFound(err) {
+	if err != nil {
 		glog.Errorf("FAILED TO GET HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
 		return
-	}
-	if err != nil {
-		panic(err.Error())
 	}
 
 	ssClient := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace)
@@ -153,13 +150,9 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 				return
 			}
 			hpa, err = hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
-			if apierr.IsNotFound(err) {
+			if err != nil {
 				glog.Errorf("FAILED TO UPDATE HPA: %s - %v", scheduledScaler.Spec.Target.Name, err)
 				return
-			}
-			if err != nil {
-				// TODO: is it ok to panic?
-				panic(err.Error())
 			}
 			hpa.Spec.MinReplicas = min
 			hpa.Spec.MaxReplicas = *max
