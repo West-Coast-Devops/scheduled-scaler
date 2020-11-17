@@ -19,7 +19,8 @@ KN_PROJECT_ID?=$(PROJECT_ID)
 
 all: test build push deploy
 test:
-	$(GOTEST) $(TEST_CONTROLLER)
+	$(GOTEST) $(TEST_CONTROLLER) $(CONTROLLER)
+	$(GOTEST) ./...
 build:
 	GOOS=linux $(GOBUILD) \
   -a --ldflags '-extldflags "-static"' \
