@@ -15,6 +15,7 @@ require (
 	github.com/go-openapi/swag v0.0.0-20170606142751-f3f9494671f9
 	github.com/gogo/protobuf v0.0.0-20170330071051-c0656edd0d9e
 	github.com/golang/glog v0.0.0-20141105023935-44145f04b68c
+	github.com/golang/mock v1.4.3
 	github.com/golang/protobuf v0.0.0-20171021043952-1643683e1b54
 	github.com/google/btree v0.0.0-20160524151835-7d79101e329e
 	github.com/google/gofuzz v0.0.0-20161122191042-44d81051d367
@@ -27,7 +28,7 @@ require (
 	github.com/juju/ratelimit v0.0.0-20170523012141-5b9ff8664717
 	github.com/mailru/easyjson v0.0.0-20170624190925-2f5df55504eb
 	github.com/peterbourgon/diskv v2.0.1+incompatible
-	github.com/robfig/cron v1.0.1-0.20171101201047-2315d5715e36
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/spf13/pflag v0.0.0-20170130214245-9ff6c6923cff
 	github.com/stretchr/testify v1.6.1
 	go.uber.org/multierr v1.5.0

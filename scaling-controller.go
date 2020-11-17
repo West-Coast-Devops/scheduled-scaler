@@ -8,10 +8,11 @@ import (
 	"time"
 
 	"github.com/golang/glog"
-	"github.com/robfig/cron"
+	"github.com/robfig/cron/v3"
 
 	apierr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/clientcmd"
@@ -74,7 +75,7 @@ func validateScheduledScaler(scheduledScaler *scalingv1alpha1.ScheduledScaler) e
 	}
 	var err error
 	for _, step := range scheduledScaler.Spec.Steps {
-		schedule, stepErr := cron.Parse(step.Runat)
+		schedule, stepErr := scalingcron.Parse(step.Runat)
 		if stepErr != nil {
 			err = multierr.Append(err, fmt.Errorf("error parsing Runat %s: %w", step.Runat, stepErr))
 			continue
@@ -129,7 +130,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 	for key := range ssCopy.Spec.Steps {
 		step := scheduledScaler.Spec.Steps[key]
 		min, max := scalingstep.Parse(step)
-		scalingcron.Push(stepsCron, step.Runat, func() {
+		_, err = scalingcron.Push(stepsCron, step.Runat, func() {
 			hpa, err = hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
 			if apierr.IsNotFound(err) {
 				glog.Errorf("FAILED TO UPDATE HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
@@ -152,8 +153,9 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 					glog.Infof("SETTING RANGE SCALER: %s/%s -> %s - %d:%d", scheduledScaler.Namespace, scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *min, *max)
 				}
 			}
-
 		})
+		// Ignore, but report the error from pushing cron entry
+		utilruntime.HandleError(err)
 	}
 	scalingcron.Start(stepsCron)
 	c.scheduledScalerTargets = append(c.scheduledScalerTargets, ScheduledScalerTarget{scheduledScaler.Spec.Target.Name, scheduledScaler.Spec.Target.Kind, stepsCron})
