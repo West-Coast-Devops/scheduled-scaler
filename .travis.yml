@@ -3,6 +3,6 @@ language: go
 go:
 - 1.15.x
 
-go_import_path: k8s.restdev.com/pkg/foo
+go_import_path: k8s.restdev.com/operators
 
 script: make test OPERATOR=scaling
