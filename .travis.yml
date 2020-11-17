@@ -1,0 +1,8 @@
+language: go
+
+go:
+- 1.15.x
+
+go_import_path: k8s.restdev.com/pkg/foo
+
+script: make test OPERATOR=scaling
