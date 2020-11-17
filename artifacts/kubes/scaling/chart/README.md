@@ -29,7 +29,7 @@ $ helm delete --purge scheduled-scaler
 | Parameter                               | Description                                                         | Default                              |
 |-----------------------------------------|---------------------------------------------------------------------|--------------------------------------|
 | `image.repository`                      | Scheduled scaler container image                                    | `k8srestdev/scaling`                 |
-| `image.tag`                             | Scheduled scaler container image tag                                | `0.0.2`                              |
+| `image.tag`                             | Scheduled scaler container image tag                                | `0.0.3`                              |
 | `image.pullPolicy`                      | Scheduled scaler container image pull policy                        | `Always`                             |
 | `replicaCount`                          | Number of scheduled-scaler replicas to create (only 1 is supported) | `1`                                  |
 | `sslCerts.hostPath`                     | TLS certs for secure connections                                    | `/etc/ssl/certs`                     |
