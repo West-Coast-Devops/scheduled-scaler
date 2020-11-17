@@ -35,7 +35,8 @@ func TestCronParse(t *testing.T) {
 	}
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
-			schedule, err := V1Parser.Parse(tt.spec)
+			proxy := new(CronProxyImpl)
+			schedule, err := proxy.Parse(tt.spec)
 			if tt.wantErr {
 				require.Error(t, err)
 				return

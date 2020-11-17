@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/stretchr/testify/require"
 	scalingv1alpha1 "k8s.restdev.com/operators/pkg/apis/scaling/v1alpha1"
+	"k8s.restdev.com/operators/pkg/services/scaling/cron"
 	"testing"
 )
 
@@ -57,7 +58,10 @@ func Test_validateScheduledScaler(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := validateScheduledScaler(tt.scheduledScaler)
+			c := &ScheduledScalerController{
+				cronProxy: new(cron.CronProxyImpl),
+			}
+			err := c.validateScheduledScaler(tt.scheduledScaler)
 			if tt.wantErr {
 				require.Error(t, err)
 				return

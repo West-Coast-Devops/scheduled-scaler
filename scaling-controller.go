@@ -47,9 +47,10 @@ type ScheduledScalerTarget struct {
  *
  */
 type ScheduledScalerController struct {
+	cronProxy              scalingcron.CronProxy
 	informerFactory        informers.SharedInformerFactory
 	restdevClient          clientset.Interface
-	kubeClient             *kubernetes.Clientset
+	kubeClient             kubernetes.Interface
 	scheduledScalersLister listers.ScheduledScalerLister
 	scheduledScalersSynced cache.InformerSynced
 	scheduledScalerTargets []ScheduledScalerTarget
@@ -69,13 +70,13 @@ func (c *ScheduledScalerController) Run(stopCh chan struct{}) error {
 }
 
 // validateScheduledScaler validates the scheduledScaler
-func validateScheduledScaler(scheduledScaler *scalingv1alpha1.ScheduledScaler) error {
+func (c *ScheduledScalerController) validateScheduledScaler(scheduledScaler *scalingv1alpha1.ScheduledScaler) error {
 	if scheduledScaler == nil {
 		return fmt.Errorf("scheduledScaler is nil")
 	}
 	var err error
 	for _, step := range scheduledScaler.Spec.Steps {
-		schedule, stepErr := scalingcron.Parse(step.Runat)
+		schedule, stepErr := c.cronProxy.Parse(step.Runat)
 		if stepErr != nil {
 			err = multierr.Append(err, fmt.Errorf("error parsing Runat %s: %w", step.Runat, stepErr))
 			continue
@@ -101,7 +102,7 @@ func (c *ScheduledScalerController) scheduledScalerAdd(obj interface{}) {
 		glog.Warningf("object %T is not a *scalingv1alpha1.ScheduledScaler; will not add", obj)
 		return
 	}
-	if err := validateScheduledScaler(scheduledScaler); err != nil {
+	if err := c.validateScheduledScaler(scheduledScaler); err != nil {
 		glog.Errorf("error validating scheduledScaler %#v: %v; will not add", scheduledScaler, err)
 		return
 	}
@@ -126,11 +127,11 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 		panic(err.Error())
 	}
 	ssCopy := ss.DeepCopy()
-	stepsCron := scalingcron.Create(tz)
+	stepsCron := c.cronProxy.Create(tz)
 	for key := range ssCopy.Spec.Steps {
 		step := scheduledScaler.Spec.Steps[key]
 		min, max := scalingstep.Parse(step)
-		_, err = scalingcron.Push(stepsCron, step.Runat, func() {
+		_, err = c.cronProxy.Push(stepsCron, step.Runat, func() {
 			hpa, err = hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
 			if apierr.IsNotFound(err) {
 				glog.Errorf("FAILED TO UPDATE HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
@@ -157,7 +158,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 		// Ignore, but report the error from pushing cron entry
 		utilruntime.HandleError(err)
 	}
-	scalingcron.Start(stepsCron)
+	c.cronProxy.Start(stepsCron)
 	c.scheduledScalerTargets = append(c.scheduledScalerTargets, ScheduledScalerTarget{scheduledScaler.Spec.Target.Name, scheduledScaler.Spec.Target.Kind, stepsCron})
 	glog.Infof("SCHEDULED SCALER CREATED: %s -> %s", scheduledScaler.Name, scheduledScaler.Spec.Target.Name)
 }
@@ -186,11 +187,11 @@ func (c *ScheduledScalerController) scheduledScalerIgCronAdd(scheduledScaler *sc
 	}
 
 	ssCopy := ss.DeepCopy()
-	stepsCron := scalingcron.Create(tz)
+	stepsCron := c.cronProxy.Create(tz)
 	for key := range scheduledScaler.Spec.Steps {
 		step := scheduledScaler.Spec.Steps[key]
 		min, max := scalingstep.Parse(step)
-		scalingcron.Push(stepsCron, step.Runat, func() {
+		c.cronProxy.Push(stepsCron, step.Runat, func() {
 			autoscaler, err = computeService.Autoscalers.Get(projectId, zone, scheduledScaler.Spec.Target.Name).Do()
 			autoscaler.AutoscalingPolicy.MaxNumReplicas = int64(*max)
 			autoscaler.AutoscalingPolicy.MinNumReplicas = int64(*min)
@@ -210,7 +211,7 @@ func (c *ScheduledScalerController) scheduledScalerIgCronAdd(scheduledScaler *sc
 		})
 	}
 
-	scalingcron.Start(stepsCron)
+	c.cronProxy.Start(stepsCron)
 	c.scheduledScalerTargets = append(c.scheduledScalerTargets, ScheduledScalerTarget{scheduledScaler.Spec.Target.Name, scheduledScaler.Spec.Target.Kind, stepsCron})
 	glog.Infof("SCHEDULED SCALER CREATED: %s -> %s", scheduledScaler.Name, scheduledScaler.Spec.Target.Name)
 }
@@ -274,15 +275,17 @@ func (c *ScheduledScalerController) scheduledScalerFindTargetKey(name string) (i
  *
  */
 func NewScheduledScalerController(
+	cronProxy scalingcron.CronProxy,
 	informerFactory informers.SharedInformerFactory,
 	restdevClient clientset.Interface,
-	kubeClient *kubernetes.Clientset,
+	kubeClient kubernetes.Interface,
 ) *ScheduledScalerController {
 	scheduledScalerInformer := informerFactory.Scaling().V1alpha1().ScheduledScalers()
 	scheduledScalersLister := scheduledScalerInformer.Lister()
 	var scheduledScalerTargets []ScheduledScalerTarget
 
 	c := &ScheduledScalerController{
+		cronProxy:              cronProxy,
 		informerFactory:        informerFactory,
 		restdevClient:          restdevClient,
 		kubeClient:             kubeClient,
@@ -325,7 +328,8 @@ func main() {
 	}
 
 	factory := informers.NewSharedInformerFactory(restdevClient, time.Hour*24)
-	controller := NewScheduledScalerController(factory, restdevClient, kubeClient)
+	cronProxy := new(scalingcron.CronProxyImpl)
+	controller := NewScheduledScalerController(cronProxy, factory, restdevClient, kubeClient)
 	stop := make(chan struct{})
 	defer close(stop)
 	err = controller.Run(stop)
