@@ -5,13 +5,14 @@
 package mock_v1alpha1
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	v1alpha1 "k8s.restdev.com/operators/pkg/apis/scaling/v1alpha1"
 	v1alpha10 "k8s.restdev.com/operators/pkg/client/clientset/versioned/typed/scaling/v1alpha1"
-	reflect "reflect"
 )
 
 // MockScheduledScalersGetter is a mock of ScheduledScalersGetter interface

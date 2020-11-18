@@ -5,11 +5,12 @@
 package mock_v1alpha1
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	labels "k8s.io/apimachinery/pkg/labels"
 	v1alpha1 "k8s.restdev.com/operators/pkg/apis/scaling/v1alpha1"
 	v1alpha10 "k8s.restdev.com/operators/pkg/client/listers/scaling/v1alpha1"
-	reflect "reflect"
 )
 
 // MockScheduledScalerLister is a mock of ScheduledScalerLister interface

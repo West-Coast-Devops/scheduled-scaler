@@ -5,6 +5,8 @@
 package mock_external
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	v1 "k8s.io/api/autoscaling/v1"
 	v10 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -12,7 +14,6 @@ import (
 	watch "k8s.io/apimachinery/pkg/watch"
 	v11 "k8s.io/client-go/kubernetes/typed/autoscaling/v1"
 	rest "k8s.io/client-go/rest"
-	reflect "reflect"
 )
 
 // MockAutoscalingV1Interface is a mock of AutoscalingV1Interface interface

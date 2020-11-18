@@ -3,8 +3,9 @@ package cron
 //go:generate mockgen -source $GOFILE -destination=mock_$GOPACKAGE/$GOFILE -package mock_$GOPACKAGE
 
 import (
-	"github.com/robfig/cron"
 	"time"
+
+	"github.com/robfig/cron"
 )
 
 // CronProxy wraps the cron object for testing purposes, as this interface can be mocked.

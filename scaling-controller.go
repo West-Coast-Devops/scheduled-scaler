@@ -3,11 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"go.uber.org/multierr"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"reflect"
 	"sync"
 	"time"
+
+	"go.uber.org/multierr"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 
 	"github.com/golang/glog"
 	"github.com/robfig/cron"

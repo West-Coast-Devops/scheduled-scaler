@@ -5,10 +5,11 @@
 package mock_v1alpha1
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	rest "k8s.io/client-go/rest"
 	v1alpha1 "k8s.restdev.com/operators/pkg/client/clientset/versioned/typed/scaling/v1alpha1"
-	reflect "reflect"
 )
 
 // MockScalingV1alpha1Interface is a mock of ScalingV1alpha1Interface interface
