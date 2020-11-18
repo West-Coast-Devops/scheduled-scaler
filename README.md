@@ -1,5 +1,5 @@
 # Scheduled Scaler
-![Docker Image Version (latest by date)](https://img.shields.io/docker/v/k8srestdev/scaling?style=for-the-badge)
+![Docker Image Version (latest by date)](https://img.shields.io/docker/v/k8srestdev/scaling?style=for-the-badge) ![Travis (.com) branch](https://img.shields.io/travis/com/West-Coast-Devops/scheduled-scaler/master?style=for-the-badge)
 
 In order to use the ScheduledScaler you will need to install the CRD and deploy the Scaling Controller into your Kubernetes cluster.
 
