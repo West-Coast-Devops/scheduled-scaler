@@ -8,6 +8,13 @@ import (
 )
 
 func TestCronImpl_Create(t *testing.T) {
+
+	losAngelesTZ, err := time.LoadLocation("America/Los_Angeles")
+	require.NoError(t, err)
+	newYorkTZ, err := time.LoadLocation("America/New_York")
+	require.NoError(t, err)
+	assert.NotEqual(t, losAngelesTZ, newYorkTZ)
+
 	tests := []struct {
 		name         string
 		timeZone     string
@@ -27,6 +34,16 @@ func TestCronImpl_Create(t *testing.T) {
 			name:     `bogus timezone returns error`,
 			timeZone: "bogus",
 			wantErr:  true,
+		},
+		{
+			name:         `PST`,
+			timeZone:     "America/Los_Angeles",
+			wantLocation: losAngelesTZ,
+		},
+		{
+			name:         `EST`,
+			timeZone:     "America/New_York",
+			wantLocation: newYorkTZ,
 		},
 	}
 	for _, tt := range tests {
