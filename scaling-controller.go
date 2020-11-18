@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"go.uber.org/multierr"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"reflect"
 	"sync"
 	"time"
@@ -17,6 +18,9 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/clientcmd"
 
+	"golang.org/x/net/context"
+	"golang.org/x/oauth2/google"
+	"google.golang.org/api/compute/v1"
 	scalingv1alpha1 "k8s.restdev.com/operators/pkg/apis/scaling/v1alpha1"
 	clientset "k8s.restdev.com/operators/pkg/client/clientset/versioned"
 	informers "k8s.restdev.com/operators/pkg/client/informers/externalversions"
@@ -24,10 +28,6 @@ import (
 	scalingcron "k8s.restdev.com/operators/pkg/services/scaling/cron"
 	scalingmetadata "k8s.restdev.com/operators/pkg/services/scaling/metadata"
 	scalingstep "k8s.restdev.com/operators/pkg/services/scaling/step"
-
-	"golang.org/x/net/context"
-	"golang.org/x/oauth2/google"
-	"google.golang.org/api/compute/v1"
 )
 
 /**
@@ -100,11 +100,13 @@ func (c *ScheduledScalerController) validateScheduledScaler(scheduledScaler *sca
 func (c *ScheduledScalerController) scheduledScalerAdd(obj interface{}) {
 	scheduledScaler, ok := obj.(*scalingv1alpha1.ScheduledScaler)
 	if !ok {
-		glog.Warningf("object %T is not a *scalingv1alpha1.ScheduledScaler; will not add", obj)
+		utilruntime.HandleError(fmt.Errorf(
+			"object %T is not a *scalingv1alpha1.ScheduledScaler; will not add", obj))
 		return
 	}
 	if err := c.validateScheduledScaler(scheduledScaler); err != nil {
-		glog.Errorf("error validating scheduledScaler %#v: %v; will not add", scheduledScaler, err)
+		utilruntime.HandleError(fmt.Errorf(
+			"error validating scheduledScaler %#v: %w; will not add", scheduledScaler, err))
 		return
 	}
 	if scheduledScaler.Spec.Target.Kind == "HorizontalPodAutoscaler" {
@@ -119,13 +121,15 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 	tz := scheduledScaler.Spec.TimeZone
 	ss, err := c.scheduledScalersLister.ScheduledScalers(scheduledScaler.Namespace).Get(scheduledScaler.Name)
 	if err != nil {
-		glog.Errorf("FAILED TO GET SCHEDULED SCALER: %s - %v", scheduledScaler.Spec.Target.Name, err)
+		utilruntime.HandleError(fmt.Errorf(
+			"FAILED TO GET SCHEDULED SCALER: %s - %w", scheduledScaler.Spec.Target.Name, err))
 		return
 	}
 	hpaClient := c.kubeClient.AutoscalingV1().HorizontalPodAutoscalers(scheduledScaler.Namespace)
 	hpa, err := hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
 	if err != nil {
-		glog.Errorf("FAILED TO GET HPA: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
+		utilruntime.HandleError(fmt.Errorf(
+			"FAILED TO GET HPA: %s - %w", scheduledScaler.Spec.Target.Name, err))
 		return
 	}
 
@@ -145,12 +149,14 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 			hpaRetries := 0
 		HpaAgain:
 			if hpaRetries > c.maxRetries {
-				glog.Errorf("FAILED TO UPDATE HPA: %s after %d retries", scheduledScaler.Spec.Target.Name, hpaRetries)
+				utilruntime.HandleError(fmt.Errorf(
+					"FAILED TO UPDATE HPA: %s after %d retries", scheduledScaler.Spec.Target.Name, hpaRetries))
 				return
 			}
 			hpa, err = hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
 			if err != nil {
-				glog.Errorf("FAILED TO UPDATE HPA: %s - %v", scheduledScaler.Spec.Target.Name, err)
+				utilruntime.HandleError(fmt.Errorf(
+					"FAILED TO UPDATE HPA: %s - %w", scheduledScaler.Spec.Target.Name, err))
 				return
 			}
 			hpa.Spec.MinReplicas = min
@@ -162,18 +168,21 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 				goto HpaAgain
 			}
 			if err != nil {
-				glog.Infof("FAILED TO UPDATE HPA: %s - %v", scheduledScaler.Spec.Target.Name, err)
+				utilruntime.HandleError(fmt.Errorf(
+					"FAILED TO UPDATE HPA: %s - %w", scheduledScaler.Spec.Target.Name, err))
 				return
 			}
 			ssRetries := 0
 		SSAgain:
 			if ssRetries > c.maxRetries {
-				glog.Errorf("FAILED TO UPDATE SS: %s after %d retries", scheduledScaler.Name, ssRetries)
+				utilruntime.HandleError(fmt.Errorf(
+					"FAILED TO UPDATE SS: %s after %d retries", scheduledScaler.Name, ssRetries))
 				return
 			}
 			ss, err := ssClient.Get(scheduledScaler.Name, metav1.GetOptions{})
 			if err != nil {
-				glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %v", scheduledScaler.Name, err)
+				utilruntime.HandleError(fmt.Errorf(
+					"FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %w", scheduledScaler.Name, err))
 				return
 			}
 			ss.Status.Mode = step.Mode
@@ -186,7 +195,8 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 				goto SSAgain
 			}
 			if err != nil {
-				glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %v", scheduledScaler.Name, err)
+				utilruntime.HandleError(fmt.Errorf(
+					"FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %w", scheduledScaler.Name, err))
 				return
 			}
 			glog.Infof("SETTING RANGE SCALER: %s/%s -> %s - %d:%d", scheduledScaler.Namespace, scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *min, *max)
@@ -202,22 +212,26 @@ func (c *ScheduledScalerController) scheduledScalerIgCronAdd(scheduledScaler *sc
 	tz := scheduledScaler.Spec.TimeZone
 	ss, err := c.scheduledScalersLister.ScheduledScalers(scheduledScaler.Namespace).Get(scheduledScaler.Name)
 	if err != nil {
-		panic(err.Error())
+		utilruntime.HandleError(err)
+		return
 	}
 
 	ctx := context.Background()
 	client, err := google.DefaultClient(ctx, compute.ComputeScope)
 	if err != nil {
-		panic(err.Error())
+		utilruntime.HandleError(err)
+		return
 	}
 	computeService, err := compute.New(client)
 	if err != nil {
-		panic(err.Error())
+		utilruntime.HandleError(err)
+		return
 	}
 
 	autoscaler, err := computeService.Autoscalers.Get(projectId, zone, scheduledScaler.Spec.Target.Name).Do()
 	if err != nil {
-		panic(err.Error())
+		utilruntime.HandleError(err)
+		return
 	}
 
 	ssCopy := ss.DeepCopy()
@@ -231,17 +245,18 @@ func (c *ScheduledScalerController) scheduledScalerIgCronAdd(scheduledScaler *sc
 			autoscaler.AutoscalingPolicy.MinNumReplicas = int64(*min)
 			_, err := computeService.Autoscalers.Update(projectId, zone, autoscaler).Do()
 			if err != nil {
-				glog.Infof("FAILED TO UPDATE IG AUTOSCALER: %s - %s", scheduledScaler.Spec.Target.Name, err.Error())
-			} else {
-				ssCopy.Status.Mode = step.Mode
-				ssCopy.Status.MinReplicas = *min
-				ssCopy.Status.MaxReplicas = *max
-				_, err := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ssCopy)
-				if err != nil {
-					glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %s", scheduledScaler.Name, err.Error())
-				}
-				glog.Infof("SETTING RANGE IG SCALER: %s -> %s - %d/%d", scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *min, *max)
+				utilruntime.HandleError(fmt.Errorf(
+					"FAILED TO UPDATE IG AUTOSCALER: %s - %w", scheduledScaler.Spec.Target.Name, err))
+				return
 			}
+			ssCopy.Status.Mode = step.Mode
+			ssCopy.Status.MinReplicas = *min
+			ssCopy.Status.MaxReplicas = *max
+			if _, err = c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ssCopy); err != nil {
+				utilruntime.HandleError(fmt.Errorf(
+					"FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %w", scheduledScaler.Name, err))
+			}
+			glog.Infof("SETTING RANGE IG SCALER: %s -> %s - %d/%d", scheduledScaler.Name, scheduledScaler.Spec.Target.Name, *min, *max)
 		})
 	}
 
