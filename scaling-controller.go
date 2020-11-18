@@ -312,7 +312,7 @@ func (c *ScheduledScalerController) scheduledScalerFindTargetKey(name string) (i
 func NewScheduledScalerController(
 	informerFactory informers.SharedInformerFactory,
 	restdevClient clientset.Interface,
-	kubeClient *kubernetes.Clientset,
+	kubeClient kubernetes.Interface,
 ) *ScheduledScalerController {
 	scheduledScalerInformer := informerFactory.Scaling().V1alpha1().ScheduledScalers()
 	scheduledScalersLister := scheduledScalerInformer.Lister()
