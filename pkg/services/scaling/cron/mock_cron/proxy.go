@@ -5,10 +5,9 @@
 package mock_cron
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	cron "github.com/robfig/cron"
+	reflect "reflect"
 )
 
 // MockCronProxy is a mock of CronProxy interface

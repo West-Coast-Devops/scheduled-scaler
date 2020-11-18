@@ -5,11 +5,10 @@
 package mock_versioned
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	discovery "k8s.io/client-go/discovery"
 	v1alpha1 "k8s.restdev.com/operators/pkg/client/clientset/versioned/typed/scaling/v1alpha1"
+	reflect "reflect"
 )
 
 // MockInterface is a mock of Interface interface
