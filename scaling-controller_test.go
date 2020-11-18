@@ -108,6 +108,7 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 	tests := []struct {
 		name           string
 		ss             scalingv1alpha1.ScheduledScaler
+		maxRetries     int
 		ssListerGetErr error
 		hpaGetResults  []*v1.HorizontalPodAutoscaler
 		hpaGetErrs     []error
@@ -126,8 +127,9 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			},
 		},
 		{
-			name: "SS with one spec, fails once and retries",
-			ss:   testSS,
+			name:       "SS with one spec, fails once and retries",
+			ss:         testSS,
+			maxRetries: 3,
 			hpaGetResults: []*v1.HorizontalPodAutoscaler{
 				testHPA,
 				testHPA,
@@ -153,8 +155,9 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			},
 		},
 		{
-			name: "SS with one spec, fails ss update once and retries",
-			ss:   testSS,
+			name:       "SS with one spec, fails ss update once and retries",
+			ss:         testSS,
+			maxRetries: 3,
 			hpaGetResults: []*v1.HorizontalPodAutoscaler{
 				testHPA,
 				testHPA,
@@ -180,8 +183,9 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			},
 		},
 		{
-			name: "SS with one spec, fails more than maxRetries; never calls ss update",
-			ss:   testSS,
+			name:       "SS with one spec, fails more than maxRetries; never calls ss update",
+			ss:         testSS,
+			maxRetries: 3,
 			hpaGetResults: []*v1.HorizontalPodAutoscaler{
 				testHPA,
 				testHPA,
@@ -299,6 +303,7 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 				ScalingV1alpha1().
 				Return(mockScalingV1alpha1Interface)
 			c := &ScheduledScalerController{
+				maxRetries:             tt.maxRetries,
 				cronProxy:              mockCronProxy,
 				restdevClient:          mockRestdevClient,
 				kubeClient:             mockKubeClient,

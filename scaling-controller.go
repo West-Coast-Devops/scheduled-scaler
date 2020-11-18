@@ -30,8 +30,6 @@ import (
 	"google.golang.org/api/compute/v1"
 )
 
-const maxRetries = 3
-
 /**
  *
  * Target Struct
@@ -49,6 +47,7 @@ type ScheduledScalerTarget struct {
  *
  */
 type ScheduledScalerController struct {
+	maxRetries             int
 	cronProxy              scalingcron.CronProxy
 	informerFactory        informers.SharedInformerFactory
 	restdevClient          clientset.Interface
@@ -145,7 +144,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 
 			hpaRetries := 0
 		HpaAgain:
-			if hpaRetries > maxRetries {
+			if hpaRetries > c.maxRetries {
 				glog.Errorf("FAILED TO UPDATE HPA: %s after %d retries", scheduledScaler.Spec.Target.Name, hpaRetries)
 				return
 			}
@@ -168,7 +167,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 			}
 			ssRetries := 0
 		SSAgain:
-			if ssRetries > maxRetries {
+			if ssRetries > c.maxRetries {
 				glog.Errorf("FAILED TO UPDATE SS: %s after %d retries", scheduledScaler.Name, ssRetries)
 				return
 			}
@@ -310,6 +309,7 @@ func (c *ScheduledScalerController) scheduledScalerFindTargetKey(name string) (i
  *
  */
 func NewScheduledScalerController(
+	maxRetries int,
 	cronProxy scalingcron.CronProxy,
 	informerFactory informers.SharedInformerFactory,
 	restdevClient clientset.Interface,
@@ -320,6 +320,7 @@ func NewScheduledScalerController(
 	var scheduledScalerTargets []ScheduledScalerTarget
 
 	c := &ScheduledScalerController{
+		maxRetries:             maxRetries,
 		cronProxy:              cronProxy,
 		informerFactory:        informerFactory,
 		restdevClient:          restdevClient,
@@ -344,9 +345,13 @@ func NewScheduledScalerController(
  *
  */
 func main() {
-	var kubeconfig string
+	var (
+		kubeconfig string
+		maxRetries int
+	)
 
 	flag.Set("logtostderr", "true")
+	flag.IntVar(&maxRetries, "max-retries", 1, "maximum retries before failing to update HPA or SS")
 	flag.StringVar(&kubeconfig, "kubeconfig", "", "absolute path to the kubeconfig file")
 	flag.Parse()
 
@@ -364,7 +369,7 @@ func main() {
 
 	factory := informers.NewSharedInformerFactory(restdevClient, time.Hour*24)
 	cronProxy := new(scalingcron.CronImpl)
-	controller := NewScheduledScalerController(cronProxy, factory, restdevClient, kubeClient)
+	controller := NewScheduledScalerController(maxRetries, cronProxy, factory, restdevClient, kubeClient)
 	stop := make(chan struct{})
 	defer close(stop)
 	err = controller.Run(stop)
