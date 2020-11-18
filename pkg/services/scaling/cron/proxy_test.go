@@ -38,7 +38,7 @@ func TestCronImpl_Create(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			assert.NotNil(t, got)
+			require.NotNil(t, got)
 			assert.Equal(t, tt.wantLocation, got.Location())
 		})
 	}
