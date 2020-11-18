@@ -5,6 +5,7 @@ GOBUILD=$(GOBIN) build
 GOTEST=$(GOBIN) test
 
 CONTROLLER=$(OPERATOR)-controller.go
+TEST_CONTROLLER=$(OPERATOR)-controller_test.go
 BIN=bin/k8s-restdev-$(OPERATOR)
 
 DOCKERBIN=docker
@@ -18,6 +19,7 @@ KN_PROJECT_ID?=$(PROJECT_ID)
 
 all: test build push deploy
 test:
+	$(GOTEST) $(TEST_CONTROLLER) $(CONTROLLER)
 	$(GOTEST) ./...
 build:
 	GOOS=linux $(GOBUILD) \
