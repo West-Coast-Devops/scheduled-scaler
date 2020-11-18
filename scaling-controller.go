@@ -72,13 +72,13 @@ func (c *ScheduledScalerController) Run(stopCh chan struct{}) error {
 }
 
 // validateScheduledScaler validates the scheduledScaler
-func validateScheduledScaler(scheduledScaler *scalingv1alpha1.ScheduledScaler) error {
+func (c *ScheduledScalerController) validateScheduledScaler(scheduledScaler *scalingv1alpha1.ScheduledScaler) error {
 	if scheduledScaler == nil {
 		return fmt.Errorf("scheduledScaler is nil")
 	}
 	var err error
 	for _, step := range scheduledScaler.Spec.Steps {
-		schedule, stepErr := cron.Parse(step.Runat)
+		schedule, stepErr := c.cronProxy.Parse(step.Runat)
 		if stepErr != nil {
 			err = multierr.Append(err, fmt.Errorf("error parsing Runat %s: %w", step.Runat, stepErr))
 			continue
@@ -104,7 +104,7 @@ func (c *ScheduledScalerController) scheduledScalerAdd(obj interface{}) {
 		glog.Warningf("object %T is not a *scalingv1alpha1.ScheduledScaler; will not add", obj)
 		return
 	}
-	if err := validateScheduledScaler(scheduledScaler); err != nil {
+	if err := c.validateScheduledScaler(scheduledScaler); err != nil {
 		glog.Errorf("error validating scheduledScaler %#v: %v; will not add", scheduledScaler, err)
 		return
 	}
@@ -288,7 +288,7 @@ func (c *ScheduledScalerController) scheduledScalerCronDelete(obj interface{}) {
 		return
 	}
 	glog.Infof("STOPPING CRONS FOR SCALER TARGET: %s -> %s", scheduledScaler.Name, scheduledScaler.Spec.Target.Name)
-	c.scheduledScalerTargets[key].Cron.Stop()
+	c.cronProxy.Stop(c.scheduledScalerTargets[key].Cron)
 	c.scheduledScalerTargets[key] = c.scheduledScalerTargets[0]
 	c.scheduledScalerTargets = c.scheduledScalerTargets[1:]
 	glog.Infof("SCHEDULED SCALER TARGET DELETED: %s -> %s", scheduledScaler.Name, scheduledScaler.Spec.Target.Name)
@@ -310,6 +310,7 @@ func (c *ScheduledScalerController) scheduledScalerFindTargetKey(name string) (i
  *
  */
 func NewScheduledScalerController(
+	cronProxy scalingcron.CronProxy,
 	informerFactory informers.SharedInformerFactory,
 	restdevClient clientset.Interface,
 	kubeClient kubernetes.Interface,
@@ -319,6 +320,7 @@ func NewScheduledScalerController(
 	var scheduledScalerTargets []ScheduledScalerTarget
 
 	c := &ScheduledScalerController{
+		cronProxy:              cronProxy,
 		informerFactory:        informerFactory,
 		restdevClient:          restdevClient,
 		kubeClient:             kubeClient,
@@ -361,7 +363,8 @@ func main() {
 	}
 
 	factory := informers.NewSharedInformerFactory(restdevClient, time.Hour*24)
-	controller := NewScheduledScalerController(factory, restdevClient, kubeClient)
+	cronProxy := new(scalingcron.CronImpl)
+	controller := NewScheduledScalerController(cronProxy, factory, restdevClient, kubeClient)
 	stop := make(chan struct{})
 	defer close(stop)
 	err = controller.Run(stop)

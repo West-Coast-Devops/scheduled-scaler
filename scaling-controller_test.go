@@ -12,6 +12,7 @@ import (
 	"k8s.restdev.com/operators/pkg/client/clientset/versioned/mock_versioned"
 	mock_v1alpha12 "k8s.restdev.com/operators/pkg/client/clientset/versioned/typed/scaling/v1alpha1/mock_v1alpha1"
 	"k8s.restdev.com/operators/pkg/client/listers/scaling/v1alpha1/mock_v1alpha1"
+	cron2 "k8s.restdev.com/operators/pkg/services/scaling/cron"
 	"k8s.restdev.com/operators/pkg/services/scaling/cron/mock_cron"
 	mock_external "k8s.restdev.com/operators/test/external"
 	"testing"
@@ -68,7 +69,10 @@ func Test_validateScheduledScaler(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := validateScheduledScaler(tt.scheduledScaler)
+			c := &ScheduledScalerController{
+				cronProxy: new(cron2.CronImpl),
+			}
+			err := c.validateScheduledScaler(tt.scheduledScaler)
 			if tt.wantErr {
 				require.Error(t, err)
 				return

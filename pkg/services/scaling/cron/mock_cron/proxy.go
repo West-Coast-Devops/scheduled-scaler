@@ -33,6 +33,21 @@ func (m *MockCronProxy) EXPECT() *MockCronProxyMockRecorder {
 	return m.recorder
 }
 
+// Parse mocks base method
+func (m *MockCronProxy) Parse(spec string) (cron.Schedule, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Parse", spec)
+	ret0, _ := ret[0].(cron.Schedule)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Parse indicates an expected call of Parse
+func (mr *MockCronProxyMockRecorder) Parse(spec interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Parse", reflect.TypeOf((*MockCronProxy)(nil).Parse), spec)
+}
+
 // Create mocks base method
 func (m *MockCronProxy) Create(timeZone string) *cron.Cron {
 	m.ctrl.T.Helper()

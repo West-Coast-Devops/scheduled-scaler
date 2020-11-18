@@ -9,6 +9,7 @@ import (
 
 // CronProxy wraps the cron object for testing purposes, as this interface can be mocked.
 type CronProxy interface {
+	Parse(spec string) (cron.Schedule, error)
 	Create(timeZone string) *cron.Cron
 	Push(c *cron.Cron, time string, call func())
 	Start(c *cron.Cron)
@@ -17,6 +18,11 @@ type CronProxy interface {
 
 // CronImpl passes methods through to cron methods.
 type CronImpl struct {
+}
+
+// Parse parses the spec into a schedule.
+func (ci *CronImpl) Parse(spec string) (cron.Schedule, error) {
+	return cron.Parse(spec)
 }
 
 // Create creates a cron object for the given timeZone.
