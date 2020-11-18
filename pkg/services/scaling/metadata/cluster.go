@@ -21,7 +21,7 @@ func GetClusterInfo() (projectId, zone string, err error) {
 	projectId = string(projectIdBody)
 	zoneBody, err := ioutil.ReadAll(zoneResp.Body)
 	zoneSlice := strings.Split(string(zoneBody), "/")
-	zone = zoneSlice[ len(zoneSlice) - 1 ]
+	zone = zoneSlice[len(zoneSlice)-1]
 
 	return projectId, zone, err
 }

@@ -49,11 +49,12 @@ func (mr *MockCronProxyMockRecorder) Parse(spec interface{}) *gomock.Call {
 }
 
 // Create mocks base method
-func (m *MockCronProxy) Create(timeZone string) *cron.Cron {
+func (m *MockCronProxy) Create(timeZone string) (*cron.Cron, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", timeZone)
 	ret0, _ := ret[0].(*cron.Cron)
-	return ret0
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Create indicates an expected call of Create

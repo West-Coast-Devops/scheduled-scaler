@@ -30,30 +30,30 @@ type ScheduledScaler struct {
 }
 
 type ScheduledScalerTarget struct {
-	Kind string `json:"kind"`
+	Kind       string `json:"kind"`
 	ApiVersion string `json:"apiVersion"`
-	Name string `json:"name"`
+	Name       string `json:"name"`
 }
 
 type ScheduledScalerStep struct {
-	Runat string `json:"runat"`
-	Mode string `json:"mode"`
+	Runat       string `json:"runat"`
+	Mode        string `json:"mode"`
 	MinReplicas *int32 `json:"minReplicas"`
 	MaxReplicas *int32 `json:"maxReplicas"`
-	Replicas *int32 `json:"replicas"`
+	Replicas    *int32 `json:"replicas"`
 }
 
 type ScheduledScalerSpec struct {
-	Target ScheduledScalerTarget `json:"target"`
-	Steps []ScheduledScalerStep `json:"steps"`
-	TimeZone string `json:"timeZone"`
+	Target   ScheduledScalerTarget `json:"target"`
+	Steps    []ScheduledScalerStep `json:"steps"`
+	TimeZone string                `json:"timeZone"`
 }
 
 // FooStatus is the status for a Foo resource
 type ScheduledScalerStatus struct {
-	Mode string `json:"mode"`
-	MinReplicas int32 `json:"minReplicas"`
-	MaxReplicas int32 `json:"maxReplicas"`
+	Mode        string `json:"mode"`
+	MinReplicas int32  `json:"minReplicas"`
+	MaxReplicas int32  `json:"maxReplicas"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

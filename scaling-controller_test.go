@@ -216,8 +216,8 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			mockCronProxy := mock_cron.NewMockCronProxy(ctrl)
 			mockCronProxy.EXPECT().
 				Create(gomock.Any()).
-				DoAndReturn(func(tz string) *cron.Cron {
-					return cron.New()
+				DoAndReturn(func(tz string) (*cron.Cron, error) {
+					return cron.New(), nil
 				})
 			var calls []func()
 			for _, step := range tt.ss.Spec.Steps {

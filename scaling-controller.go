@@ -136,7 +136,12 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 	ssClient := c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace)
 	// TODO: is this really needed?
 	ssCopy := ss.DeepCopy()
-	stepsCron := c.cronProxy.Create(tz)
+	stepsCron, err := c.cronProxy.Create(tz)
+	if err != nil {
+		utilruntime.HandleError(fmt.Errorf(
+			"FAILED TO CREATE CRON: %s - %w", scheduledScaler.Spec.Target.Name, err))
+		return
+	}
 	var mutex sync.Mutex
 	for key := range ssCopy.Spec.Steps {
 		step := scheduledScaler.Spec.Steps[key]
@@ -235,7 +240,11 @@ func (c *ScheduledScalerController) scheduledScalerIgCronAdd(scheduledScaler *sc
 	}
 
 	ssCopy := ss.DeepCopy()
-	stepsCron := c.cronProxy.Create(tz)
+	stepsCron, err := c.cronProxy.Create(tz)
+	if err != nil {
+		utilruntime.HandleError(err)
+		return
+	}
 	for key := range scheduledScaler.Spec.Steps {
 		step := scheduledScaler.Spec.Steps[key]
 		min, max := scalingstep.Parse(step)
