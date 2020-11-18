@@ -16,6 +16,8 @@ limitations under the License.
 
 package v1alpha1
 
+//go:generate mockgen -destination=mock_$GOPACKAGE/$GOFILE k8s.restdev.com/operators/pkg/client/clientset/versioned/typed/scaling/v1alpha1 ScheduledScalersGetter,ScheduledScalerInterface
+
 import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"

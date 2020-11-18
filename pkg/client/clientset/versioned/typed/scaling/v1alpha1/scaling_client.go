@@ -16,6 +16,8 @@ limitations under the License.
 
 package v1alpha1
 
+//go:generate mockgen -destination=mock_$GOPACKAGE/$GOFILE k8s.restdev.com/operators/pkg/client/clientset/versioned/typed/scaling/v1alpha1 ScalingV1alpha1Interface
+
 import (
 	serializer "k8s.io/apimachinery/pkg/runtime/serializer"
 	rest "k8s.io/client-go/rest"
