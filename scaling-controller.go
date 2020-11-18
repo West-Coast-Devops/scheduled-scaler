@@ -163,7 +163,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 			hpa.Spec.MaxReplicas = *max
 			_, err = hpaClient.Update(hpa)
 			if apierr.IsConflict(err) {
-				glog.Infof("FAILED TO UPDATE HPA: %s - %v; retrying", scheduledScaler.Spec.Target.Name, err)
+				glog.Infof("FAILED TO UPDATE HPA: %s - %w; retrying", scheduledScaler.Spec.Target.Name, err)
 				hpaRetries++
 				goto HpaAgain
 			}
@@ -190,7 +190,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 			ss.Status.MaxReplicas = *max
 			_, err = ssClient.Update(ss)
 			if apierr.IsConflict(err) {
-				glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %v; retrying", scheduledScaler.Name, err)
+				glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %w; retrying", scheduledScaler.Name, err)
 				ssRetries++
 				goto SSAgain
 			}
