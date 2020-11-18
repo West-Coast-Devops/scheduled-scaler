@@ -9,11 +9,14 @@ import (
 
 func TestCronImpl_Create(t *testing.T) {
 
+	// Set up test expectation objects in outer testing scope.
 	losAngelesTZ, err := time.LoadLocation("America/Los_Angeles")
 	require.NoError(t, err)
+	assert.Equal(t, "America/Los_Angeles", losAngelesTZ.String())
 	newYorkTZ, err := time.LoadLocation("America/New_York")
 	require.NoError(t, err)
 	assert.NotEqual(t, losAngelesTZ, newYorkTZ)
+	assert.Equal(t, "America/New_York", newYorkTZ.String())
 
 	tests := []struct {
 		name         string
