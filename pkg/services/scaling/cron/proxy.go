@@ -3,14 +3,15 @@ package cron
 //go:generate mockgen -source $GOFILE -destination=mock_$GOPACKAGE/$GOFILE -package mock_$GOPACKAGE
 
 import (
-	"github.com/robfig/cron"
 	"time"
+
+	"github.com/robfig/cron"
 )
 
 // CronProxy wraps the cron object for testing purposes, as this interface can be mocked.
 type CronProxy interface {
 	Parse(spec string) (cron.Schedule, error)
-	Create(timeZone string) *cron.Cron
+	Create(timeZone string) (*cron.Cron, error)
 	Push(c *cron.Cron, time string, call func())
 	Start(c *cron.Cron)
 	Stop(c *cron.Cron)
@@ -26,10 +27,13 @@ func (ci *CronImpl) Parse(spec string) (cron.Schedule, error) {
 }
 
 // Create creates a cron object for the given timeZone.
-func (ci *CronImpl) Create(timeZone string) *cron.Cron {
-	l, _ := time.LoadLocation(timeZone)
+func (ci *CronImpl) Create(timeZone string) (*cron.Cron, error) {
+	l, err := time.LoadLocation(timeZone)
+	if err != nil {
+		return nil, err
+	}
 
-	return cron.NewWithLocation(l)
+	return cron.NewWithLocation(l), nil
 }
 
 // Push pushes the time spec onto the cron, c, with call callback.

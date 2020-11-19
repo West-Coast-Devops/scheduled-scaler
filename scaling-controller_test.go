@@ -1,6 +1,8 @@
 package main
 
 import (
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/robfig/cron"
 	"github.com/stretchr/testify/require"
@@ -15,7 +17,6 @@ import (
 	cron2 "k8s.restdev.com/operators/pkg/services/scaling/cron"
 	"k8s.restdev.com/operators/pkg/services/scaling/cron/mock_cron"
 	mock_external "k8s.restdev.com/operators/test/external"
-	"testing"
 )
 
 func Test_validateScheduledScaler(t *testing.T) {
@@ -216,8 +217,8 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			mockCronProxy := mock_cron.NewMockCronProxy(ctrl)
 			mockCronProxy.EXPECT().
 				Create(gomock.Any()).
-				DoAndReturn(func(tz string) *cron.Cron {
-					return cron.New()
+				DoAndReturn(func(tz string) (*cron.Cron, error) {
+					return cron.New(), nil
 				})
 			var calls []func()
 			for _, step := range tt.ss.Spec.Steps {

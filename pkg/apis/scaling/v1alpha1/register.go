@@ -18,7 +18,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	 scaling "k8s.restdev.com/operators/pkg/apis/scaling"
+	scaling "k8s.restdev.com/operators/pkg/apis/scaling"
 )
 
 // SchemeGroupVersion is group version used to register these objects
