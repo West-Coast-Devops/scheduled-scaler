@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: k8srestdev/scaling
-  tag: 0.0.3
+  tag: 0.0.4
   pullPolicy: Always
 sslCerts:
   hostPath: "/etc/ssl/certs"

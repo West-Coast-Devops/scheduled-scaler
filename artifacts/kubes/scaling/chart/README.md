@@ -15,7 +15,7 @@ For more information read [scheduled-scaler overview](http://k8s.restdev.com/p/s
 ## Installing the Chart
 
 ```bash
-$ helm install . --name scheduled-scaler
+$ helm install scheduled-scaler .
 ```
 
 ## Uninstalling the Chart
@@ -29,7 +29,7 @@ $ helm delete --purge scheduled-scaler
 | Parameter                               | Description                                                         | Default                              |
 |-----------------------------------------|---------------------------------------------------------------------|--------------------------------------|
 | `image.repository`                      | Scheduled scaler container image                                    | `k8srestdev/scaling`                 |
-| `image.tag`                             | Scheduled scaler container image tag                                | `0.0.3`                              |
+| `image.tag`                             | Scheduled scaler container image tag                                | `0.0.4`                              |
 | `image.pullPolicy`                      | Scheduled scaler container image pull policy                        | `Always`                             |
 | `replicaCount`                          | Number of scheduled-scaler replicas to create (only 1 is supported) | `1`                                  |
 | `sslCerts.hostPath`                     | TLS certs for secure connections                                    | `/etc/ssl/certs`                     |
