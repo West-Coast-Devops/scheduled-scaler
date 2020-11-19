@@ -27,7 +27,7 @@ cd $GOPATH/src/k8s.restdev.com/operators
     
 **Install using Helm Chart**
 ```bash
-helm install artifacts/kubes/scaling/chart --name scheduled-scaler
+helm install scheduled-scaler artifacts/kubes/scaling/chart
 ```
 
 > **Note**: This uses the image stored at https://hub.docker.com/r/k8srestdev/scaling by default.
