@@ -36,11 +36,11 @@ type ScheduledScalerTarget struct {
 }
 
 type ScheduledScalerStep struct {
-	Runat       string `json:"runat"`
-	Mode        string `json:"mode"`
-	MinReplicas *int32 `json:"minReplicas"`
-	MaxReplicas *int32 `json:"maxReplicas"`
-	Replicas    *int32 `json:"replicas"`
+	Runat                          string `json:"runat"`
+	Mode                           string `json:"mode"`
+	MinReplicas                    *int32 `json:"minReplicas"`
+	MaxReplicas                    *int32 `json:"maxReplicas"`
+	Replicas                       *int32 `json:"replicas"`
 	TargetCPUUtilizationPercentage *int32 `json:"targetCPUUtilizationPercentage,omitempty"`
 }
 
@@ -52,9 +52,9 @@ type ScheduledScalerSpec struct {
 
 // ScheduledScalerStatus is the status for a ScheduledScaler resource
 type ScheduledScalerStatus struct {
-	Mode        string `json:"mode"`
-	MinReplicas int32  `json:"minReplicas"`
-	MaxReplicas int32  `json:"maxReplicas"`
+	Mode                           string `json:"mode"`
+	MinReplicas                    int32  `json:"minReplicas"`
+	MaxReplicas                    int32  `json:"maxReplicas"`
 	TargetCPUUtilizationPercentage *int32 `json:"targetCPUUtilizationPercentage,omitempty"`
 }
 
