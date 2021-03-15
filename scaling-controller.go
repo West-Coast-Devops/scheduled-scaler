@@ -146,7 +146,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 	var mutex sync.Mutex
 	for key := range ssCopy.Spec.Steps {
 		step := scheduledScaler.Spec.Steps[key]
-		min, max := scalingstep.Parse(step)
+		min, max, cpuTarget := scalingstep.Parse(step)
 		c.cronProxy.Push(stepsCron, step.Runat, func() {
 			// If this scheduled scaler retries, don't let the "next" one get overwritten by its retry.
 			mutex.Lock()
@@ -167,6 +167,9 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 			}
 			hpa.Spec.MinReplicas = min
 			hpa.Spec.MaxReplicas = *max
+			if cpuTarget != nil {
+				hpa.Spec.TargetCPUUtilizationPercentage = cpuTarget
+			}
 			_, err = hpaClient.Update(hpa)
 			if apierr.IsConflict(err) {
 				glog.Infof("FAILED TO UPDATE HPA: %s - %v; retrying", scheduledScaler.Spec.Target.Name, err)
@@ -194,6 +197,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 			ss.Status.Mode = step.Mode
 			ss.Status.MinReplicas = *min
 			ss.Status.MaxReplicas = *max
+			ss.Status.TargetCPUUtilizationPercentage = cpuTarget
 			_, err = ssClient.Update(ss)
 			if apierr.IsConflict(err) {
 				glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %v; retrying", scheduledScaler.Name, err)
@@ -248,11 +252,19 @@ func (c *ScheduledScalerController) scheduledScalerIgCronAdd(scheduledScaler *sc
 	}
 	for key := range scheduledScaler.Spec.Steps {
 		step := scheduledScaler.Spec.Steps[key]
-		min, max := scalingstep.Parse(step)
+		min, max, cpuTarget := scalingstep.Parse(step)
 		c.cronProxy.Push(stepsCron, step.Runat, func() {
 			autoscaler, err = computeService.Autoscalers.Get(projectId, zone, scheduledScaler.Spec.Target.Name).Do()
 			autoscaler.AutoscalingPolicy.MaxNumReplicas = int64(*max)
 			autoscaler.AutoscalingPolicy.MinNumReplicas = int64(*min)
+			if cpuTarget != nil {
+				if autoscaler.AutoscalingPolicy.CpuUtilization == nil {
+					utilruntime.HandleError(fmt.Errorf(
+						"%s - IG autoscaler doesn't use CpuUtilization Policys", scheduledScaler.Spec.Target.Name))
+					return
+				}
+				autoscaler.AutoscalingPolicy.CpuUtilization.UtilizationTarget = float64(*cpuTarget / 100.)
+			}
 			_, err := computeService.Autoscalers.Update(projectId, zone, autoscaler).Do()
 			if err != nil {
 				utilruntime.HandleError(fmt.Errorf(
