@@ -37,3 +37,5 @@ ifeq ($(DEPLOYBIN), kn)
 else
 	cat ./artifacts/kubes/$(OPERATOR)/deployment.yml | sed "s|\[IMAGE\]|$(IMAGE)|g" | kubectl --namespace=kube-system apply -f -
 endif
+lint:
+	golangci-lint run --timeout 180s --out-format checkstyle
