@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/robfig/cron"
+	"github.com/robfig/cron/v3"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/autoscaling/v1"
 	"k8s.io/apimachinery/pkg/api/errors"

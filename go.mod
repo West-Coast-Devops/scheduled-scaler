@@ -27,7 +27,7 @@ require (
 	github.com/juju/ratelimit v0.0.0-20170523012141-5b9ff8664717 // indirect
 	github.com/mailru/easyjson v0.0.0-20170624190925-2f5df55504eb // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
-	github.com/robfig/cron v1.0.1-0.20171101201047-2315d5715e36
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/spf13/pflag v0.0.0-20170130214245-9ff6c6923cff // indirect
 	github.com/stretchr/testify v1.6.1
 	go.uber.org/multierr v1.5.0
