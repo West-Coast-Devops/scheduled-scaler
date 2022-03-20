@@ -5,6 +5,8 @@
 package mock_external
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	discovery "k8s.io/client-go/discovery"
 	v1alpha1 "k8s.io/client-go/kubernetes/typed/admissionregistration/v1alpha1"
@@ -35,33 +37,32 @@ import (
 	v17 "k8s.io/client-go/kubernetes/typed/storage/v1"
 	v1alpha13 "k8s.io/client-go/kubernetes/typed/storage/v1alpha1"
 	v1beta19 "k8s.io/client-go/kubernetes/typed/storage/v1beta1"
-	reflect "reflect"
 )
 
-// MockInterface is a mock of Interface interface
+// MockInterface is a mock of Interface interface.
 type MockInterface struct {
 	ctrl     *gomock.Controller
 	recorder *MockInterfaceMockRecorder
 }
 
-// MockInterfaceMockRecorder is the mock recorder for MockInterface
+// MockInterfaceMockRecorder is the mock recorder for MockInterface.
 type MockInterfaceMockRecorder struct {
 	mock *MockInterface
 }
 
-// NewMockInterface creates a new mock instance
+// NewMockInterface creates a new mock instance.
 func NewMockInterface(ctrl *gomock.Controller) *MockInterface {
 	mock := &MockInterface{ctrl: ctrl}
 	mock.recorder = &MockInterfaceMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
 	return m.recorder
 }
 
-// Admissionregistration mocks base method
+// Admissionregistration mocks base method.
 func (m *MockInterface) Admissionregistration() v1beta1.AdmissionregistrationV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Admissionregistration")
@@ -69,13 +70,13 @@ func (m *MockInterface) Admissionregistration() v1beta1.AdmissionregistrationV1b
 	return ret0
 }
 
-// Admissionregistration indicates an expected call of Admissionregistration
+// Admissionregistration indicates an expected call of Admissionregistration.
 func (mr *MockInterfaceMockRecorder) Admissionregistration() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Admissionregistration", reflect.TypeOf((*MockInterface)(nil).Admissionregistration))
 }
 
-// AdmissionregistrationV1alpha1 mocks base method
+// AdmissionregistrationV1alpha1 mocks base method.
 func (m *MockInterface) AdmissionregistrationV1alpha1() v1alpha1.AdmissionregistrationV1alpha1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AdmissionregistrationV1alpha1")
@@ -83,13 +84,13 @@ func (m *MockInterface) AdmissionregistrationV1alpha1() v1alpha1.Admissionregist
 	return ret0
 }
 
-// AdmissionregistrationV1alpha1 indicates an expected call of AdmissionregistrationV1alpha1
+// AdmissionregistrationV1alpha1 indicates an expected call of AdmissionregistrationV1alpha1.
 func (mr *MockInterfaceMockRecorder) AdmissionregistrationV1alpha1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AdmissionregistrationV1alpha1", reflect.TypeOf((*MockInterface)(nil).AdmissionregistrationV1alpha1))
 }
 
-// AdmissionregistrationV1beta1 mocks base method
+// AdmissionregistrationV1beta1 mocks base method.
 func (m *MockInterface) AdmissionregistrationV1beta1() v1beta1.AdmissionregistrationV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AdmissionregistrationV1beta1")
@@ -97,13 +98,13 @@ func (m *MockInterface) AdmissionregistrationV1beta1() v1beta1.Admissionregistra
 	return ret0
 }
 
-// AdmissionregistrationV1beta1 indicates an expected call of AdmissionregistrationV1beta1
+// AdmissionregistrationV1beta1 indicates an expected call of AdmissionregistrationV1beta1.
 func (mr *MockInterfaceMockRecorder) AdmissionregistrationV1beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AdmissionregistrationV1beta1", reflect.TypeOf((*MockInterface)(nil).AdmissionregistrationV1beta1))
 }
 
-// Apps mocks base method
+// Apps mocks base method.
 func (m *MockInterface) Apps() v1.AppsV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Apps")
@@ -111,13 +112,13 @@ func (m *MockInterface) Apps() v1.AppsV1Interface {
 	return ret0
 }
 
-// Apps indicates an expected call of Apps
+// Apps indicates an expected call of Apps.
 func (mr *MockInterfaceMockRecorder) Apps() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Apps", reflect.TypeOf((*MockInterface)(nil).Apps))
 }
 
-// AppsV1 mocks base method
+// AppsV1 mocks base method.
 func (m *MockInterface) AppsV1() v1.AppsV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AppsV1")
@@ -125,13 +126,13 @@ func (m *MockInterface) AppsV1() v1.AppsV1Interface {
 	return ret0
 }
 
-// AppsV1 indicates an expected call of AppsV1
+// AppsV1 indicates an expected call of AppsV1.
 func (mr *MockInterfaceMockRecorder) AppsV1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AppsV1", reflect.TypeOf((*MockInterface)(nil).AppsV1))
 }
 
-// AppsV1beta1 mocks base method
+// AppsV1beta1 mocks base method.
 func (m *MockInterface) AppsV1beta1() v1beta10.AppsV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AppsV1beta1")
@@ -139,13 +140,13 @@ func (m *MockInterface) AppsV1beta1() v1beta10.AppsV1beta1Interface {
 	return ret0
 }
 
-// AppsV1beta1 indicates an expected call of AppsV1beta1
+// AppsV1beta1 indicates an expected call of AppsV1beta1.
 func (mr *MockInterfaceMockRecorder) AppsV1beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AppsV1beta1", reflect.TypeOf((*MockInterface)(nil).AppsV1beta1))
 }
 
-// AppsV1beta2 mocks base method
+// AppsV1beta2 mocks base method.
 func (m *MockInterface) AppsV1beta2() v1beta2.AppsV1beta2Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AppsV1beta2")
@@ -153,13 +154,13 @@ func (m *MockInterface) AppsV1beta2() v1beta2.AppsV1beta2Interface {
 	return ret0
 }
 
-// AppsV1beta2 indicates an expected call of AppsV1beta2
+// AppsV1beta2 indicates an expected call of AppsV1beta2.
 func (mr *MockInterfaceMockRecorder) AppsV1beta2() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AppsV1beta2", reflect.TypeOf((*MockInterface)(nil).AppsV1beta2))
 }
 
-// Authentication mocks base method
+// Authentication mocks base method.
 func (m *MockInterface) Authentication() v10.AuthenticationV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Authentication")
@@ -167,13 +168,13 @@ func (m *MockInterface) Authentication() v10.AuthenticationV1Interface {
 	return ret0
 }
 
-// Authentication indicates an expected call of Authentication
+// Authentication indicates an expected call of Authentication.
 func (mr *MockInterfaceMockRecorder) Authentication() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authentication", reflect.TypeOf((*MockInterface)(nil).Authentication))
 }
 
-// AuthenticationV1 mocks base method
+// AuthenticationV1 mocks base method.
 func (m *MockInterface) AuthenticationV1() v10.AuthenticationV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AuthenticationV1")
@@ -181,13 +182,13 @@ func (m *MockInterface) AuthenticationV1() v10.AuthenticationV1Interface {
 	return ret0
 }
 
-// AuthenticationV1 indicates an expected call of AuthenticationV1
+// AuthenticationV1 indicates an expected call of AuthenticationV1.
 func (mr *MockInterfaceMockRecorder) AuthenticationV1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthenticationV1", reflect.TypeOf((*MockInterface)(nil).AuthenticationV1))
 }
 
-// AuthenticationV1beta1 mocks base method
+// AuthenticationV1beta1 mocks base method.
 func (m *MockInterface) AuthenticationV1beta1() v1beta11.AuthenticationV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AuthenticationV1beta1")
@@ -195,13 +196,13 @@ func (m *MockInterface) AuthenticationV1beta1() v1beta11.AuthenticationV1beta1In
 	return ret0
 }
 
-// AuthenticationV1beta1 indicates an expected call of AuthenticationV1beta1
+// AuthenticationV1beta1 indicates an expected call of AuthenticationV1beta1.
 func (mr *MockInterfaceMockRecorder) AuthenticationV1beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthenticationV1beta1", reflect.TypeOf((*MockInterface)(nil).AuthenticationV1beta1))
 }
 
-// Authorization mocks base method
+// Authorization mocks base method.
 func (m *MockInterface) Authorization() v11.AuthorizationV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Authorization")
@@ -209,13 +210,13 @@ func (m *MockInterface) Authorization() v11.AuthorizationV1Interface {
 	return ret0
 }
 
-// Authorization indicates an expected call of Authorization
+// Authorization indicates an expected call of Authorization.
 func (mr *MockInterfaceMockRecorder) Authorization() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authorization", reflect.TypeOf((*MockInterface)(nil).Authorization))
 }
 
-// AuthorizationV1 mocks base method
+// AuthorizationV1 mocks base method.
 func (m *MockInterface) AuthorizationV1() v11.AuthorizationV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AuthorizationV1")
@@ -223,13 +224,13 @@ func (m *MockInterface) AuthorizationV1() v11.AuthorizationV1Interface {
 	return ret0
 }
 
-// AuthorizationV1 indicates an expected call of AuthorizationV1
+// AuthorizationV1 indicates an expected call of AuthorizationV1.
 func (mr *MockInterfaceMockRecorder) AuthorizationV1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthorizationV1", reflect.TypeOf((*MockInterface)(nil).AuthorizationV1))
 }
 
-// AuthorizationV1beta1 mocks base method
+// AuthorizationV1beta1 mocks base method.
 func (m *MockInterface) AuthorizationV1beta1() v1beta12.AuthorizationV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AuthorizationV1beta1")
@@ -237,13 +238,13 @@ func (m *MockInterface) AuthorizationV1beta1() v1beta12.AuthorizationV1beta1Inte
 	return ret0
 }
 
-// AuthorizationV1beta1 indicates an expected call of AuthorizationV1beta1
+// AuthorizationV1beta1 indicates an expected call of AuthorizationV1beta1.
 func (mr *MockInterfaceMockRecorder) AuthorizationV1beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthorizationV1beta1", reflect.TypeOf((*MockInterface)(nil).AuthorizationV1beta1))
 }
 
-// Autoscaling mocks base method
+// Autoscaling mocks base method.
 func (m *MockInterface) Autoscaling() v12.AutoscalingV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Autoscaling")
@@ -251,13 +252,13 @@ func (m *MockInterface) Autoscaling() v12.AutoscalingV1Interface {
 	return ret0
 }
 
-// Autoscaling indicates an expected call of Autoscaling
+// Autoscaling indicates an expected call of Autoscaling.
 func (mr *MockInterfaceMockRecorder) Autoscaling() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Autoscaling", reflect.TypeOf((*MockInterface)(nil).Autoscaling))
 }
 
-// AutoscalingV1 mocks base method
+// AutoscalingV1 mocks base method.
 func (m *MockInterface) AutoscalingV1() v12.AutoscalingV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AutoscalingV1")
@@ -265,13 +266,13 @@ func (m *MockInterface) AutoscalingV1() v12.AutoscalingV1Interface {
 	return ret0
 }
 
-// AutoscalingV1 indicates an expected call of AutoscalingV1
+// AutoscalingV1 indicates an expected call of AutoscalingV1.
 func (mr *MockInterfaceMockRecorder) AutoscalingV1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AutoscalingV1", reflect.TypeOf((*MockInterface)(nil).AutoscalingV1))
 }
 
-// AutoscalingV2beta1 mocks base method
+// AutoscalingV2beta1 mocks base method.
 func (m *MockInterface) AutoscalingV2beta1() v2beta1.AutoscalingV2beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AutoscalingV2beta1")
@@ -279,13 +280,13 @@ func (m *MockInterface) AutoscalingV2beta1() v2beta1.AutoscalingV2beta1Interface
 	return ret0
 }
 
-// AutoscalingV2beta1 indicates an expected call of AutoscalingV2beta1
+// AutoscalingV2beta1 indicates an expected call of AutoscalingV2beta1.
 func (mr *MockInterfaceMockRecorder) AutoscalingV2beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AutoscalingV2beta1", reflect.TypeOf((*MockInterface)(nil).AutoscalingV2beta1))
 }
 
-// Batch mocks base method
+// Batch mocks base method.
 func (m *MockInterface) Batch() v13.BatchV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Batch")
@@ -293,13 +294,13 @@ func (m *MockInterface) Batch() v13.BatchV1Interface {
 	return ret0
 }
 
-// Batch indicates an expected call of Batch
+// Batch indicates an expected call of Batch.
 func (mr *MockInterfaceMockRecorder) Batch() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Batch", reflect.TypeOf((*MockInterface)(nil).Batch))
 }
 
-// BatchV1 mocks base method
+// BatchV1 mocks base method.
 func (m *MockInterface) BatchV1() v13.BatchV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BatchV1")
@@ -307,13 +308,13 @@ func (m *MockInterface) BatchV1() v13.BatchV1Interface {
 	return ret0
 }
 
-// BatchV1 indicates an expected call of BatchV1
+// BatchV1 indicates an expected call of BatchV1.
 func (mr *MockInterfaceMockRecorder) BatchV1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BatchV1", reflect.TypeOf((*MockInterface)(nil).BatchV1))
 }
 
-// BatchV1beta1 mocks base method
+// BatchV1beta1 mocks base method.
 func (m *MockInterface) BatchV1beta1() v1beta13.BatchV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BatchV1beta1")
@@ -321,13 +322,13 @@ func (m *MockInterface) BatchV1beta1() v1beta13.BatchV1beta1Interface {
 	return ret0
 }
 
-// BatchV1beta1 indicates an expected call of BatchV1beta1
+// BatchV1beta1 indicates an expected call of BatchV1beta1.
 func (mr *MockInterfaceMockRecorder) BatchV1beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BatchV1beta1", reflect.TypeOf((*MockInterface)(nil).BatchV1beta1))
 }
 
-// BatchV2alpha1 mocks base method
+// BatchV2alpha1 mocks base method.
 func (m *MockInterface) BatchV2alpha1() v2alpha1.BatchV2alpha1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BatchV2alpha1")
@@ -335,13 +336,13 @@ func (m *MockInterface) BatchV2alpha1() v2alpha1.BatchV2alpha1Interface {
 	return ret0
 }
 
-// BatchV2alpha1 indicates an expected call of BatchV2alpha1
+// BatchV2alpha1 indicates an expected call of BatchV2alpha1.
 func (mr *MockInterfaceMockRecorder) BatchV2alpha1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BatchV2alpha1", reflect.TypeOf((*MockInterface)(nil).BatchV2alpha1))
 }
 
-// Certificates mocks base method
+// Certificates mocks base method.
 func (m *MockInterface) Certificates() v1beta14.CertificatesV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Certificates")
@@ -349,13 +350,13 @@ func (m *MockInterface) Certificates() v1beta14.CertificatesV1beta1Interface {
 	return ret0
 }
 
-// Certificates indicates an expected call of Certificates
+// Certificates indicates an expected call of Certificates.
 func (mr *MockInterfaceMockRecorder) Certificates() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Certificates", reflect.TypeOf((*MockInterface)(nil).Certificates))
 }
 
-// CertificatesV1beta1 mocks base method
+// CertificatesV1beta1 mocks base method.
 func (m *MockInterface) CertificatesV1beta1() v1beta14.CertificatesV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CertificatesV1beta1")
@@ -363,13 +364,13 @@ func (m *MockInterface) CertificatesV1beta1() v1beta14.CertificatesV1beta1Interf
 	return ret0
 }
 
-// CertificatesV1beta1 indicates an expected call of CertificatesV1beta1
+// CertificatesV1beta1 indicates an expected call of CertificatesV1beta1.
 func (mr *MockInterfaceMockRecorder) CertificatesV1beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CertificatesV1beta1", reflect.TypeOf((*MockInterface)(nil).CertificatesV1beta1))
 }
 
-// Core mocks base method
+// Core mocks base method.
 func (m *MockInterface) Core() v14.CoreV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Core")
@@ -377,13 +378,13 @@ func (m *MockInterface) Core() v14.CoreV1Interface {
 	return ret0
 }
 
-// Core indicates an expected call of Core
+// Core indicates an expected call of Core.
 func (mr *MockInterfaceMockRecorder) Core() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Core", reflect.TypeOf((*MockInterface)(nil).Core))
 }
 
-// CoreV1 mocks base method
+// CoreV1 mocks base method.
 func (m *MockInterface) CoreV1() v14.CoreV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CoreV1")
@@ -391,13 +392,13 @@ func (m *MockInterface) CoreV1() v14.CoreV1Interface {
 	return ret0
 }
 
-// CoreV1 indicates an expected call of CoreV1
+// CoreV1 indicates an expected call of CoreV1.
 func (mr *MockInterfaceMockRecorder) CoreV1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CoreV1", reflect.TypeOf((*MockInterface)(nil).CoreV1))
 }
 
-// Discovery mocks base method
+// Discovery mocks base method.
 func (m *MockInterface) Discovery() discovery.DiscoveryInterface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Discovery")
@@ -405,13 +406,13 @@ func (m *MockInterface) Discovery() discovery.DiscoveryInterface {
 	return ret0
 }
 
-// Discovery indicates an expected call of Discovery
+// Discovery indicates an expected call of Discovery.
 func (mr *MockInterfaceMockRecorder) Discovery() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Discovery", reflect.TypeOf((*MockInterface)(nil).Discovery))
 }
 
-// Events mocks base method
+// Events mocks base method.
 func (m *MockInterface) Events() v1beta15.EventsV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Events")
@@ -419,13 +420,13 @@ func (m *MockInterface) Events() v1beta15.EventsV1beta1Interface {
 	return ret0
 }
 
-// Events indicates an expected call of Events
+// Events indicates an expected call of Events.
 func (mr *MockInterfaceMockRecorder) Events() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Events", reflect.TypeOf((*MockInterface)(nil).Events))
 }
 
-// EventsV1beta1 mocks base method
+// EventsV1beta1 mocks base method.
 func (m *MockInterface) EventsV1beta1() v1beta15.EventsV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EventsV1beta1")
@@ -433,13 +434,13 @@ func (m *MockInterface) EventsV1beta1() v1beta15.EventsV1beta1Interface {
 	return ret0
 }
 
-// EventsV1beta1 indicates an expected call of EventsV1beta1
+// EventsV1beta1 indicates an expected call of EventsV1beta1.
 func (mr *MockInterfaceMockRecorder) EventsV1beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EventsV1beta1", reflect.TypeOf((*MockInterface)(nil).EventsV1beta1))
 }
 
-// Extensions mocks base method
+// Extensions mocks base method.
 func (m *MockInterface) Extensions() v1beta16.ExtensionsV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Extensions")
@@ -447,13 +448,13 @@ func (m *MockInterface) Extensions() v1beta16.ExtensionsV1beta1Interface {
 	return ret0
 }
 
-// Extensions indicates an expected call of Extensions
+// Extensions indicates an expected call of Extensions.
 func (mr *MockInterfaceMockRecorder) Extensions() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Extensions", reflect.TypeOf((*MockInterface)(nil).Extensions))
 }
 
-// ExtensionsV1beta1 mocks base method
+// ExtensionsV1beta1 mocks base method.
 func (m *MockInterface) ExtensionsV1beta1() v1beta16.ExtensionsV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ExtensionsV1beta1")
@@ -461,13 +462,13 @@ func (m *MockInterface) ExtensionsV1beta1() v1beta16.ExtensionsV1beta1Interface 
 	return ret0
 }
 
-// ExtensionsV1beta1 indicates an expected call of ExtensionsV1beta1
+// ExtensionsV1beta1 indicates an expected call of ExtensionsV1beta1.
 func (mr *MockInterfaceMockRecorder) ExtensionsV1beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExtensionsV1beta1", reflect.TypeOf((*MockInterface)(nil).ExtensionsV1beta1))
 }
 
-// Networking mocks base method
+// Networking mocks base method.
 func (m *MockInterface) Networking() v15.NetworkingV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Networking")
@@ -475,13 +476,13 @@ func (m *MockInterface) Networking() v15.NetworkingV1Interface {
 	return ret0
 }
 
-// Networking indicates an expected call of Networking
+// Networking indicates an expected call of Networking.
 func (mr *MockInterfaceMockRecorder) Networking() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Networking", reflect.TypeOf((*MockInterface)(nil).Networking))
 }
 
-// NetworkingV1 mocks base method
+// NetworkingV1 mocks base method.
 func (m *MockInterface) NetworkingV1() v15.NetworkingV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "NetworkingV1")
@@ -489,13 +490,13 @@ func (m *MockInterface) NetworkingV1() v15.NetworkingV1Interface {
 	return ret0
 }
 
-// NetworkingV1 indicates an expected call of NetworkingV1
+// NetworkingV1 indicates an expected call of NetworkingV1.
 func (mr *MockInterfaceMockRecorder) NetworkingV1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NetworkingV1", reflect.TypeOf((*MockInterface)(nil).NetworkingV1))
 }
 
-// Policy mocks base method
+// Policy mocks base method.
 func (m *MockInterface) Policy() v1beta17.PolicyV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Policy")
@@ -503,13 +504,13 @@ func (m *MockInterface) Policy() v1beta17.PolicyV1beta1Interface {
 	return ret0
 }
 
-// Policy indicates an expected call of Policy
+// Policy indicates an expected call of Policy.
 func (mr *MockInterfaceMockRecorder) Policy() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Policy", reflect.TypeOf((*MockInterface)(nil).Policy))
 }
 
-// PolicyV1beta1 mocks base method
+// PolicyV1beta1 mocks base method.
 func (m *MockInterface) PolicyV1beta1() v1beta17.PolicyV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PolicyV1beta1")
@@ -517,13 +518,13 @@ func (m *MockInterface) PolicyV1beta1() v1beta17.PolicyV1beta1Interface {
 	return ret0
 }
 
-// PolicyV1beta1 indicates an expected call of PolicyV1beta1
+// PolicyV1beta1 indicates an expected call of PolicyV1beta1.
 func (mr *MockInterfaceMockRecorder) PolicyV1beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PolicyV1beta1", reflect.TypeOf((*MockInterface)(nil).PolicyV1beta1))
 }
 
-// Rbac mocks base method
+// Rbac mocks base method.
 func (m *MockInterface) Rbac() v16.RbacV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Rbac")
@@ -531,13 +532,13 @@ func (m *MockInterface) Rbac() v16.RbacV1Interface {
 	return ret0
 }
 
-// Rbac indicates an expected call of Rbac
+// Rbac indicates an expected call of Rbac.
 func (mr *MockInterfaceMockRecorder) Rbac() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Rbac", reflect.TypeOf((*MockInterface)(nil).Rbac))
 }
 
-// RbacV1 mocks base method
+// RbacV1 mocks base method.
 func (m *MockInterface) RbacV1() v16.RbacV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RbacV1")
@@ -545,13 +546,13 @@ func (m *MockInterface) RbacV1() v16.RbacV1Interface {
 	return ret0
 }
 
-// RbacV1 indicates an expected call of RbacV1
+// RbacV1 indicates an expected call of RbacV1.
 func (mr *MockInterfaceMockRecorder) RbacV1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RbacV1", reflect.TypeOf((*MockInterface)(nil).RbacV1))
 }
 
-// RbacV1alpha1 mocks base method
+// RbacV1alpha1 mocks base method.
 func (m *MockInterface) RbacV1alpha1() v1alpha10.RbacV1alpha1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RbacV1alpha1")
@@ -559,13 +560,13 @@ func (m *MockInterface) RbacV1alpha1() v1alpha10.RbacV1alpha1Interface {
 	return ret0
 }
 
-// RbacV1alpha1 indicates an expected call of RbacV1alpha1
+// RbacV1alpha1 indicates an expected call of RbacV1alpha1.
 func (mr *MockInterfaceMockRecorder) RbacV1alpha1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RbacV1alpha1", reflect.TypeOf((*MockInterface)(nil).RbacV1alpha1))
 }
 
-// RbacV1beta1 mocks base method
+// RbacV1beta1 mocks base method.
 func (m *MockInterface) RbacV1beta1() v1beta18.RbacV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RbacV1beta1")
@@ -573,13 +574,13 @@ func (m *MockInterface) RbacV1beta1() v1beta18.RbacV1beta1Interface {
 	return ret0
 }
 
-// RbacV1beta1 indicates an expected call of RbacV1beta1
+// RbacV1beta1 indicates an expected call of RbacV1beta1.
 func (mr *MockInterfaceMockRecorder) RbacV1beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RbacV1beta1", reflect.TypeOf((*MockInterface)(nil).RbacV1beta1))
 }
 
-// Scheduling mocks base method
+// Scheduling mocks base method.
 func (m *MockInterface) Scheduling() v1alpha11.SchedulingV1alpha1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Scheduling")
@@ -587,13 +588,13 @@ func (m *MockInterface) Scheduling() v1alpha11.SchedulingV1alpha1Interface {
 	return ret0
 }
 
-// Scheduling indicates an expected call of Scheduling
+// Scheduling indicates an expected call of Scheduling.
 func (mr *MockInterfaceMockRecorder) Scheduling() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Scheduling", reflect.TypeOf((*MockInterface)(nil).Scheduling))
 }
 
-// SchedulingV1alpha1 mocks base method
+// SchedulingV1alpha1 mocks base method.
 func (m *MockInterface) SchedulingV1alpha1() v1alpha11.SchedulingV1alpha1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SchedulingV1alpha1")
@@ -601,13 +602,13 @@ func (m *MockInterface) SchedulingV1alpha1() v1alpha11.SchedulingV1alpha1Interfa
 	return ret0
 }
 
-// SchedulingV1alpha1 indicates an expected call of SchedulingV1alpha1
+// SchedulingV1alpha1 indicates an expected call of SchedulingV1alpha1.
 func (mr *MockInterfaceMockRecorder) SchedulingV1alpha1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SchedulingV1alpha1", reflect.TypeOf((*MockInterface)(nil).SchedulingV1alpha1))
 }
 
-// Settings mocks base method
+// Settings mocks base method.
 func (m *MockInterface) Settings() v1alpha12.SettingsV1alpha1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Settings")
@@ -615,13 +616,13 @@ func (m *MockInterface) Settings() v1alpha12.SettingsV1alpha1Interface {
 	return ret0
 }
 
-// Settings indicates an expected call of Settings
+// Settings indicates an expected call of Settings.
 func (mr *MockInterfaceMockRecorder) Settings() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Settings", reflect.TypeOf((*MockInterface)(nil).Settings))
 }
 
-// SettingsV1alpha1 mocks base method
+// SettingsV1alpha1 mocks base method.
 func (m *MockInterface) SettingsV1alpha1() v1alpha12.SettingsV1alpha1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SettingsV1alpha1")
@@ -629,13 +630,13 @@ func (m *MockInterface) SettingsV1alpha1() v1alpha12.SettingsV1alpha1Interface {
 	return ret0
 }
 
-// SettingsV1alpha1 indicates an expected call of SettingsV1alpha1
+// SettingsV1alpha1 indicates an expected call of SettingsV1alpha1.
 func (mr *MockInterfaceMockRecorder) SettingsV1alpha1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SettingsV1alpha1", reflect.TypeOf((*MockInterface)(nil).SettingsV1alpha1))
 }
 
-// Storage mocks base method
+// Storage mocks base method.
 func (m *MockInterface) Storage() v17.StorageV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Storage")
@@ -643,13 +644,13 @@ func (m *MockInterface) Storage() v17.StorageV1Interface {
 	return ret0
 }
 
-// Storage indicates an expected call of Storage
+// Storage indicates an expected call of Storage.
 func (mr *MockInterfaceMockRecorder) Storage() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Storage", reflect.TypeOf((*MockInterface)(nil).Storage))
 }
 
-// StorageV1 mocks base method
+// StorageV1 mocks base method.
 func (m *MockInterface) StorageV1() v17.StorageV1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StorageV1")
@@ -657,13 +658,13 @@ func (m *MockInterface) StorageV1() v17.StorageV1Interface {
 	return ret0
 }
 
-// StorageV1 indicates an expected call of StorageV1
+// StorageV1 indicates an expected call of StorageV1.
 func (mr *MockInterfaceMockRecorder) StorageV1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StorageV1", reflect.TypeOf((*MockInterface)(nil).StorageV1))
 }
 
-// StorageV1alpha1 mocks base method
+// StorageV1alpha1 mocks base method.
 func (m *MockInterface) StorageV1alpha1() v1alpha13.StorageV1alpha1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StorageV1alpha1")
@@ -671,13 +672,13 @@ func (m *MockInterface) StorageV1alpha1() v1alpha13.StorageV1alpha1Interface {
 	return ret0
 }
 
-// StorageV1alpha1 indicates an expected call of StorageV1alpha1
+// StorageV1alpha1 indicates an expected call of StorageV1alpha1.
 func (mr *MockInterfaceMockRecorder) StorageV1alpha1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StorageV1alpha1", reflect.TypeOf((*MockInterface)(nil).StorageV1alpha1))
 }
 
-// StorageV1beta1 mocks base method
+// StorageV1beta1 mocks base method.
 func (m *MockInterface) StorageV1beta1() v1beta19.StorageV1beta1Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StorageV1beta1")
@@ -685,7 +686,7 @@ func (m *MockInterface) StorageV1beta1() v1beta19.StorageV1beta1Interface {
 	return ret0
 }
 
-// StorageV1beta1 indicates an expected call of StorageV1beta1
+// StorageV1beta1 indicates an expected call of StorageV1beta1.
 func (mr *MockInterfaceMockRecorder) StorageV1beta1() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StorageV1beta1", reflect.TypeOf((*MockInterface)(nil).StorageV1beta1))

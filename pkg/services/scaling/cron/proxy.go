@@ -5,7 +5,11 @@ package cron
 import (
 	"time"
 
-	"github.com/robfig/cron"
+	"github.com/robfig/cron/v3"
+)
+
+var parser = cron.NewParser(
+	cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow,
 )
 
 // CronProxy wraps the cron object for testing purposes, as this interface can be mocked.
@@ -23,7 +27,7 @@ type CronImpl struct {
 
 // Parse parses the spec into a schedule.
 func (ci *CronImpl) Parse(spec string) (cron.Schedule, error) {
-	return cron.Parse(spec)
+	return parser.Parse(spec)
 }
 
 // Create creates a cron object for the given timeZone.
@@ -33,12 +37,12 @@ func (ci *CronImpl) Create(timeZone string) (*cron.Cron, error) {
 		return nil, err
 	}
 
-	return cron.NewWithLocation(l), nil
+	return cron.New(cron.WithLocation(l)), nil
 }
 
 // Push pushes the time spec onto the cron, c, with call callback.
 func (ci *CronImpl) Push(c *cron.Cron, time string, call func()) {
-	s, _ := cron.Parse(time)
+	s, _ := parser.Parse(time)
 	c.Schedule(s, cron.FuncJob(call))
 }
 

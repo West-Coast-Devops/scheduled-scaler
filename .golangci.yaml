@@ -1,0 +1,45 @@
+linters:
+  enable-all: false
+  enable:
+    - deadcode
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unused
+    - varcheck
+    - depguard
+    - dupl
+    - gocognit
+    - gocritic
+    - gocyclo
+    - goconst
+    - goimports
+    - gosec
+    - misspell
+    - whitespace
+issues:
+  exclude-rules:
+    # Exclude because there is no replacement yet. See https://github.com/kubernetes-sigs/controller-runtime/issues/768
+    - linters:
+        - staticcheck
+      text: 'SA1019: package sigs.k8s.io/controller-runtime/pkg/client/fake is deprecated: please use pkg/envtest for testing. This package will be dropped before the v1.0.0 release.'
+    - path: _test\.go
+      linters:
+        - gosec
+        - funlen
+        - errcheck
+        - gocyclo
+        - gochecknoglobals
+linters-settings:
+  depguard:
+    list-type: blacklist
+    include-go-root: false
+    packages:
+      - github.com/pkg/errors
+    packages-with-error-message:
+      # specify an error message to output when a blacklisted package is used
+      - github.com/pkg/errors: "use \"errors\" from standard library"
