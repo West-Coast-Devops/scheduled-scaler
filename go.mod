@@ -31,7 +31,7 @@ require (
 	github.com/spf13/pflag v0.0.0-20170130214245-9ff6c6923cff // indirect
 	github.com/stretchr/testify v1.6.1
 	go.uber.org/multierr v1.5.0
-	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
+	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2
 	golang.org/x/oauth2 v0.0.0-20170412232759-a6bd8cefa181
 	google.golang.org/api v0.0.0-20180215000618-3acc4f94acb5
 	google.golang.org/appengine v1.6.7 // indirect
@@ -43,3 +43,5 @@ require (
 	k8s.io/client-go v6.0.0+incompatible
 	k8s.io/kube-openapi v0.0.0-20171101183504-39a7bf85c140 // indirect
 )
+
+replace golang.org/x/crypto => golang.org/x/crypto v0.0.0-20220314234659-1baeb1ce4c0b
