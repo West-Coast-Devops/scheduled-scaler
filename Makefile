@@ -31,7 +31,7 @@ build:
   -o $(BIN) $(CONTROLLER)
 	$(DOCKERBUILD)
 push:
-	gcloud docker -- push $(IMAGE)
+	docker push $(IMAGE)
 deploy:
 ifeq ($(DEPLOYBIN), kn)
 	cat ./artifacts/kubes/$(OPERATOR)/deployment.yml | sed "s|\[IMAGE\]|$(IMAGE)|g" | kn $(KN_PROJECT_ID) -- --namespace=kube-system apply -f -
