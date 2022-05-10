@@ -117,7 +117,7 @@ func (c *FakeScheduledScalers) DeleteCollection(options *v1.DeleteOptions, listO
 // Patch applies the patch and returns the patched scheduledScaler.
 func (c *FakeScheduledScalers) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.ScheduledScaler, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(scheduledscalersResource, c.ns, name, data, subresources...), &v1alpha1.ScheduledScaler{})
+		Invokes(testing.NewPatchSubresourceAction(scheduledscalersResource, c.ns, name, types.JSONPatchType, data, subresources...), &v1alpha1.ScheduledScaler{})
 
 	if obj == nil {
 		return nil, err

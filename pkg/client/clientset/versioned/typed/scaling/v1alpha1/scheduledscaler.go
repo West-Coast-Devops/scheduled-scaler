@@ -19,6 +19,8 @@ package v1alpha1
 //go:generate mockgen -destination=mock_$GOPACKAGE/$GOFILE k8s.restdev.com/operators/pkg/client/clientset/versioned/typed/scaling/v1alpha1 ScheduledScalersGetter,ScheduledScalerInterface
 
 import (
+	"context"
+
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -68,7 +70,7 @@ func (c *scheduledScalers) Get(name string, options v1.GetOptions) (result *v1al
 		Resource("scheduledscalers").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do().
+		Do(context.TODO()).
 		Into(result)
 	return
 }
@@ -80,7 +82,7 @@ func (c *scheduledScalers) List(opts v1.ListOptions) (result *v1alpha1.Scheduled
 		Namespace(c.ns).
 		Resource("scheduledscalers").
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Do().
+		Do(context.TODO()).
 		Into(result)
 	return
 }
@@ -92,7 +94,7 @@ func (c *scheduledScalers) Watch(opts v1.ListOptions) (watch.Interface, error) {
 		Namespace(c.ns).
 		Resource("scheduledscalers").
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Watch()
+		Watch(context.TODO())
 }
 
 // Create takes the representation of a scheduledScaler and creates it.  Returns the server's representation of the scheduledScaler, and an error, if there is any.
@@ -102,7 +104,7 @@ func (c *scheduledScalers) Create(scheduledScaler *v1alpha1.ScheduledScaler) (re
 		Namespace(c.ns).
 		Resource("scheduledscalers").
 		Body(scheduledScaler).
-		Do().
+		Do(context.TODO()).
 		Into(result)
 	return
 }
@@ -115,7 +117,7 @@ func (c *scheduledScalers) Update(scheduledScaler *v1alpha1.ScheduledScaler) (re
 		Resource("scheduledscalers").
 		Name(scheduledScaler.Name).
 		Body(scheduledScaler).
-		Do().
+		Do(context.TODO()).
 		Into(result)
 	return
 }
@@ -127,7 +129,7 @@ func (c *scheduledScalers) Delete(name string, options *v1.DeleteOptions) error 
 		Resource("scheduledscalers").
 		Name(name).
 		Body(options).
-		Do().
+		Do(context.TODO()).
 		Error()
 }
 
@@ -138,7 +140,7 @@ func (c *scheduledScalers) DeleteCollection(options *v1.DeleteOptions, listOptio
 		Resource("scheduledscalers").
 		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Body(options).
-		Do().
+		Do(context.TODO()).
 		Error()
 }
 
@@ -151,7 +153,7 @@ func (c *scheduledScalers) Patch(name string, pt types.PatchType, data []byte, s
 		SubResource(subresources...).
 		Name(name).
 		Body(data).
-		Do().
+		Do(context.TODO()).
 		Into(result)
 	return
 }

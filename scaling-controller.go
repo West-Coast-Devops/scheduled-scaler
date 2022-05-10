@@ -127,7 +127,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 		return
 	}
 	hpaClient := c.kubeClient.AutoscalingV1().HorizontalPodAutoscalers(scheduledScaler.Namespace)
-	hpa, err := hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
+	hpa, err := hpaClient.Get(context.TODO(), scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
 	if err != nil {
 		utilruntime.HandleError(fmt.Errorf(
 			"FAILED TO GET HPA: %s - %w", scheduledScaler.Spec.Target.Name, err))
@@ -159,7 +159,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 					"FAILED TO UPDATE HPA: %s after %d retries", scheduledScaler.Spec.Target.Name, hpaRetries))
 				return
 			}
-			hpa, err = hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
+			hpa, err = hpaClient.Get(context.TODO(), scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
 			if err != nil {
 				utilruntime.HandleError(fmt.Errorf(
 					"FAILED TO UPDATE HPA: %s - %w", scheduledScaler.Spec.Target.Name, err))
@@ -167,7 +167,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 			}
 			hpa.Spec.MinReplicas = min
 			hpa.Spec.MaxReplicas = *max
-			_, err = hpaClient.Update(hpa)
+			_, err = hpaClient.Update(context.TODO(), hpa, metav1.UpdateOptions{})
 			if apierr.IsConflict(err) {
 				glog.Infof("FAILED TO UPDATE HPA: %s - %v; retrying", scheduledScaler.Spec.Target.Name, err)
 				hpaRetries++
