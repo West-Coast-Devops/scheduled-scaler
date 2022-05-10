@@ -4,6 +4,7 @@ GOBIN=go
 GOBUILD=$(GOBIN) build
 GOTEST=$(GOBIN) test
 
+OPERATOR?=scaling
 CONTROLLER=$(OPERATOR)-controller.go
 TEST_CONTROLLER=$(OPERATOR)-controller_test.go
 BIN=bin/k8s-restdev-$(OPERATOR)
