@@ -9,7 +9,7 @@ jobs:
     - stage: Testing
       script: make test OPERATOR=scaling
     - stage: Dockerizing
-      if: tag =~ ^[0-9]+.[0-9]+.[0-9]+$
+      if: tag =~ ^(test-)?[0-9]+.[0-9]+.[0-9]+$
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - make build OPERATOR="scaling" VERSION="$TRAVIS_TAG"
