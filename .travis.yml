@@ -11,5 +11,5 @@ stages:
     if: tag =~ ^[0-9]+.[0-9]+.[0-9]+$
     script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - make build OPERATOR=scaling VERSION=$TRAVIS_TAG
-    - make push OPERATOR=scaling VERSION=$TRAVIS_TAG 
+    - make build OPERATOR="scaling" VERSION="$TRAVIS_TAG"
+    - make push OPERATOR="scaling" VERSION="$TRAVIS_TAG"
