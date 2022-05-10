@@ -1,5 +1,12 @@
 language: go
 go:
-- 1.15.x
+  - 1.18.x
 go_import_path: k8s.restdev.com/operators
-script: make test OPERATOR=scaling
+services:
+  - docker
+stages:
+  - name: Testing
+    script: make test OPERATOR=scaling
+  - name: Building
+    if: tag =~ ^[0-9]+.[0-9]+.[0-9]+$
+    script: make build OPERATOR=scaling VERSION=$TRAVIS_TAG

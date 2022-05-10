@@ -9,7 +9,8 @@ TEST_CONTROLLER=$(OPERATOR)-controller_test.go
 BIN=bin/k8s-restdev-$(OPERATOR)
 
 DOCKERBIN=docker
-IMAGE?=gcr.io/$(PROJECT_ID)/k8s-restdev-$(OPERATOR):kube-system.$(DATE)
+VERSION?=kube-system.$(DATE)
+IMAGE?=k8srestdev/$(OPERATOR):$(VERSION)
 DOCKERBUILD=$(DOCKERBIN) build --build-arg bin=$(BIN) -t $(IMAGE) .
 
 DEPLOYBIN?=kubectl
