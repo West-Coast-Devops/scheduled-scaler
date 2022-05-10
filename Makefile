@@ -4,12 +4,14 @@ GOBIN=go
 GOBUILD=$(GOBIN) build
 GOTEST=$(GOBIN) test
 
+OPERATOR?=scaling
 CONTROLLER=$(OPERATOR)-controller.go
 TEST_CONTROLLER=$(OPERATOR)-controller_test.go
 BIN=bin/k8s-restdev-$(OPERATOR)
 
 DOCKERBIN=docker
-IMAGE?=gcr.io/$(PROJECT_ID)/k8s-restdev-$(OPERATOR):kube-system.$(DATE)
+VERSION?=kube-system.$(DATE)
+IMAGE?=k8srestdev/$(OPERATOR):$(VERSION)
 DOCKERBUILD=$(DOCKERBIN) build --build-arg bin=$(BIN) -t $(IMAGE) .
 
 DEPLOYBIN?=kubectl
@@ -30,7 +32,7 @@ build:
   -o $(BIN) $(CONTROLLER)
 	$(DOCKERBUILD)
 push:
-	gcloud docker -- push $(IMAGE)
+	docker push $(IMAGE)
 deploy:
 ifeq ($(DEPLOYBIN), kn)
 	cat ./artifacts/kubes/$(OPERATOR)/deployment.yml | sed "s|\[IMAGE\]|$(IMAGE)|g" | kn $(KN_PROJECT_ID) -- --namespace=kube-system apply -f -
