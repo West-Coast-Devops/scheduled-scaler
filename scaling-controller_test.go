@@ -251,7 +251,7 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			mockHPA.EXPECT().
 				Get(gomock.Any(), gomock.Any(), gomock.Any()).
 				Times(len(tt.hpaGetResults)).
-				DoAndReturn(func(ctx context.Context, string, options metav1.GetOptions) (*v1.HorizontalPodAutoscaler, error) {
+				DoAndReturn(func(ctx context.Context, name string, options metav1.GetOptions) (*v1.HorizontalPodAutoscaler, error) {
 					result := tt.hpaGetResults[getCallIndex]
 					err := tt.hpaGetErrs[getCallIndex]
 					getCallIndex++
@@ -261,7 +261,7 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			mockHPA.EXPECT().
 				Update(gomock.Any(), gomock.Any(), gomock.Any()).
 				Times(len(tt.hpaUpdatesErrs)).
-				DoAndReturn(func(ctx context.Context, input *v1.HorizontalPodAutoscaler, opts *metav1.UpdateOptions) (*v1.HorizontalPodAutoscaler, error) {
+				DoAndReturn(func(ctx context.Context, input *v1.HorizontalPodAutoscaler, opts metav1.UpdateOptions) (*v1.HorizontalPodAutoscaler, error) {
 					err := tt.hpaUpdatesErrs[updateCallIndex]
 					updateCallIndex++
 					return input, err
