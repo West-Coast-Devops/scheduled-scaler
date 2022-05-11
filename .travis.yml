@@ -1,5 +1,16 @@
 language: go
 go:
-- 1.15.x
+  - 1.18.x
 go_import_path: k8s.restdev.com/operators
-script: make test OPERATOR=scaling
+services:
+  - docker
+jobs:
+  include:
+    - stage: Testing
+      script: make test OPERATOR=scaling
+    - stage: Dockerizing
+      if: tag =~ ^(test-)?[0-9]+.[0-9]+.[0-9]+$
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - make build OPERATOR="scaling" VERSION="$TRAVIS_TAG"
+      - make push OPERATOR="scaling" VERSION="$TRAVIS_TAG"
