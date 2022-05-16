@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -248,9 +249,9 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			mockHPA := mock_external.NewMockHorizontalPodAutoscalerInterface(ctrl)
 			getCallIndex := 0
 			mockHPA.EXPECT().
-				Get(gomock.Any(), gomock.Any()).
+				Get(gomock.Any(), gomock.Any(), gomock.Any()).
 				Times(len(tt.hpaGetResults)).
-				DoAndReturn(func(name string, options metav1.GetOptions) (*v1.HorizontalPodAutoscaler, error) {
+				DoAndReturn(func(ctx context.Context, name string, options metav1.GetOptions) (*v1.HorizontalPodAutoscaler, error) {
 					result := tt.hpaGetResults[getCallIndex]
 					err := tt.hpaGetErrs[getCallIndex]
 					getCallIndex++
@@ -258,9 +259,9 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 				})
 			updateCallIndex := 0
 			mockHPA.EXPECT().
-				Update(gomock.Any()).
+				Update(gomock.Any(), gomock.Any(), gomock.Any()).
 				Times(len(tt.hpaUpdatesErrs)).
-				DoAndReturn(func(input *v1.HorizontalPodAutoscaler) (*v1.HorizontalPodAutoscaler, error) {
+				DoAndReturn(func(ctx context.Context, input *v1.HorizontalPodAutoscaler, opts metav1.UpdateOptions) (*v1.HorizontalPodAutoscaler, error) {
 					err := tt.hpaUpdatesErrs[updateCallIndex]
 					updateCallIndex++
 					return input, err

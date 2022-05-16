@@ -5,6 +5,7 @@
 package mock_external
 
 import (
+	context "context"
 	gomock "github.com/golang/mock/gomock"
 	v1 "k8s.io/api/autoscaling/v1"
 	v10 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -90,83 +91,83 @@ func (m *MockHorizontalPodAutoscalerInterface) EXPECT() *MockHorizontalPodAutosc
 }
 
 // Create mocks base method
-func (m *MockHorizontalPodAutoscalerInterface) Create(arg0 *v1.HorizontalPodAutoscaler) (*v1.HorizontalPodAutoscaler, error) {
+func (m *MockHorizontalPodAutoscalerInterface) Create(arg0 context.Context, arg1 *v1.HorizontalPodAutoscaler, arg2 v10.CreateOptions) (*v1.HorizontalPodAutoscaler, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", arg0)
+	ret := m.ctrl.Call(m, "Create", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*v1.HorizontalPodAutoscaler)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Create indicates an expected call of Create
-func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Create(arg0 interface{}) *gomock.Call {
+func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Create(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).Create), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).Create), arg0, arg1, arg2)
 }
 
 // Delete mocks base method
-func (m *MockHorizontalPodAutoscalerInterface) Delete(arg0 string, arg1 *v10.DeleteOptions) error {
+func (m *MockHorizontalPodAutoscalerInterface) Delete(arg0 context.Context, arg1 string, arg2 v10.DeleteOptions) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", arg0, arg1)
+	ret := m.ctrl.Call(m, "Delete", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Delete(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Delete(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).Delete), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).Delete), arg0, arg1, arg2)
 }
 
 // DeleteCollection mocks base method
-func (m *MockHorizontalPodAutoscalerInterface) DeleteCollection(arg0 *v10.DeleteOptions, arg1 v10.ListOptions) error {
+func (m *MockHorizontalPodAutoscalerInterface) DeleteCollection(arg0 context.Context, arg1 v10.DeleteOptions, arg2 v10.ListOptions) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteCollection", arg0, arg1)
+	ret := m.ctrl.Call(m, "DeleteCollection", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteCollection indicates an expected call of DeleteCollection
-func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) DeleteCollection(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) DeleteCollection(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCollection", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).DeleteCollection), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCollection", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).DeleteCollection), arg0, arg1, arg2)
 }
 
 // Get mocks base method
-func (m *MockHorizontalPodAutoscalerInterface) Get(arg0 string, arg1 v10.GetOptions) (*v1.HorizontalPodAutoscaler, error) {
+func (m *MockHorizontalPodAutoscalerInterface) Get(arg0 context.Context, arg1 string, arg2 v10.GetOptions) (*v1.HorizontalPodAutoscaler, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", arg0, arg1)
+	ret := m.ctrl.Call(m, "Get", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*v1.HorizontalPodAutoscaler)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Get indicates an expected call of Get
-func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Get(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Get(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).Get), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).Get), arg0, arg1, arg2)
 }
 
 // List mocks base method
-func (m *MockHorizontalPodAutoscalerInterface) List(arg0 v10.ListOptions) (*v1.HorizontalPodAutoscalerList, error) {
+func (m *MockHorizontalPodAutoscalerInterface) List(arg0 context.Context, arg1 v10.ListOptions) (*v1.HorizontalPodAutoscalerList, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List", arg0)
+	ret := m.ctrl.Call(m, "List", arg0, arg1)
 	ret0, _ := ret[0].(*v1.HorizontalPodAutoscalerList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // List indicates an expected call of List
-func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) List(arg0 interface{}) *gomock.Call {
+func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) List(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).List), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).List), arg0, arg1)
 }
 
 // Patch mocks base method
-func (m *MockHorizontalPodAutoscalerInterface) Patch(arg0 string, arg1 types.PatchType, arg2 []byte, arg3 ...string) (*v1.HorizontalPodAutoscaler, error) {
+func (m *MockHorizontalPodAutoscalerInterface) Patch(arg0 context.Context, arg1 string, arg2 types.PatchType, arg3 []byte, arg4 v10.PatchOptions, arg5 ...string) (*v1.HorizontalPodAutoscaler, error) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0, arg1, arg2}
-	for _, a := range arg3 {
+	varargs := []interface{}{arg0, arg1, arg2, arg3, arg4}
+	for _, a := range arg5 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Patch", varargs...)
@@ -176,53 +177,53 @@ func (m *MockHorizontalPodAutoscalerInterface) Patch(arg0 string, arg1 types.Pat
 }
 
 // Patch indicates an expected call of Patch
-func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Patch(arg0, arg1, arg2 interface{}, arg3 ...interface{}) *gomock.Call {
+func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Patch(arg0, arg1, arg2, arg3, arg4 interface{}, arg5 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0, arg1, arg2}, arg3...)
+	varargs := append([]interface{}{arg0, arg1, arg2, arg3, arg4}, arg5...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Patch", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).Patch), varargs...)
 }
 
 // Update mocks base method
-func (m *MockHorizontalPodAutoscalerInterface) Update(arg0 *v1.HorizontalPodAutoscaler) (*v1.HorizontalPodAutoscaler, error) {
+func (m *MockHorizontalPodAutoscalerInterface) Update(arg0 context.Context, arg1 *v1.HorizontalPodAutoscaler, arg2 v10.UpdateOptions) (*v1.HorizontalPodAutoscaler, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", arg0)
+	ret := m.ctrl.Call(m, "Update", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*v1.HorizontalPodAutoscaler)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Update indicates an expected call of Update
-func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Update(arg0 interface{}) *gomock.Call {
+func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Update(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).Update), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).Update), arg0, arg1, arg2)
 }
 
 // UpdateStatus mocks base method
-func (m *MockHorizontalPodAutoscalerInterface) UpdateStatus(arg0 *v1.HorizontalPodAutoscaler) (*v1.HorizontalPodAutoscaler, error) {
+func (m *MockHorizontalPodAutoscalerInterface) UpdateStatus(arg0 context.Context, arg1 *v1.HorizontalPodAutoscaler, arg2 v10.UpdateOptions) (*v1.HorizontalPodAutoscaler, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateStatus", arg0)
+	ret := m.ctrl.Call(m, "UpdateStatus", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*v1.HorizontalPodAutoscaler)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // UpdateStatus indicates an expected call of UpdateStatus
-func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) UpdateStatus(arg0 interface{}) *gomock.Call {
+func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) UpdateStatus(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStatus", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).UpdateStatus), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStatus", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).UpdateStatus), arg0, arg1, arg2)
 }
 
 // Watch mocks base method
-func (m *MockHorizontalPodAutoscalerInterface) Watch(arg0 v10.ListOptions) (watch.Interface, error) {
+func (m *MockHorizontalPodAutoscalerInterface) Watch(arg0 context.Context, arg1 v10.ListOptions) (watch.Interface, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Watch", arg0)
+	ret := m.ctrl.Call(m, "Watch", arg0, arg1)
 	ret0, _ := ret[0].(watch.Interface)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Watch indicates an expected call of Watch
-func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Watch(arg0 interface{}) *gomock.Call {
+func (mr *MockHorizontalPodAutoscalerInterfaceMockRecorder) Watch(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Watch", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).Watch), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Watch", reflect.TypeOf((*MockHorizontalPodAutoscalerInterface)(nil).Watch), arg0, arg1)
 }
