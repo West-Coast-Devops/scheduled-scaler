@@ -25,6 +25,16 @@
         "bug",
         "maintenance"
       ]
+    },
+    {
+      "login": "so0k",
+      "name": "so0k",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1762599?v=4",
+      "profile": "https://twitter.com/vincentdesmet",
+      "contributions": [
+        "infra",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
