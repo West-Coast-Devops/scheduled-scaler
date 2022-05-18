@@ -278,9 +278,9 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 			mockScheduledScalerInterface := mock_v1alpha12.NewMockScheduledScalerInterface(ctrl)
 			ssGetIndex := 0
 			mockScheduledScalerInterface.EXPECT().
-				Get(gomock.Any(), gomock.Any()).
+				Get(gomock.Any(), gomock.Any(), gomock.Any()).
 				Times(len(tt.ssGetResults)).
-				DoAndReturn(func(name string, options metav1.GetOptions) (*scalingv1alpha1.ScheduledScaler, error) {
+				DoAndReturn(func(context.Context, string, metav1.GetOptions) (*scalingv1alpha1.ScheduledScaler, error) {
 					result := tt.ssGetResults[ssGetIndex]
 					err := tt.ssGetErrs[ssGetIndex]
 					ssGetIndex++
@@ -289,9 +289,9 @@ func TestScheduledScalerController_scheduledScalerHpaCronAdd(t *testing.T) {
 
 			ssUpdateIndex := 0
 			mockScheduledScalerInterface.EXPECT().
-				Update(gomock.Any()).
+				Update(gomock.Any(), gomock.Any(), gomock.Any()).
 				Times(len(tt.ssUpdateErrs)).
-				DoAndReturn(func(*scalingv1alpha1.ScheduledScaler) (*scalingv1alpha1.ScheduledScaler, error) {
+				DoAndReturn(func(context.Context, *scalingv1alpha1.ScheduledScaler, metav1.UpdateOptions) (*scalingv1alpha1.ScheduledScaler, error) {
 					err := tt.ssUpdateErrs[ssUpdateIndex]
 					ssUpdateIndex++
 					return nil, err

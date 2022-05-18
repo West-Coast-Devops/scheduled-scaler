@@ -5,39 +5,41 @@
 package mock_v1alpha1
 
 import (
+	context "context"
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	v1alpha1 "k8s.restdev.com/operators/pkg/apis/scaling/v1alpha1"
 	v1alpha10 "k8s.restdev.com/operators/pkg/client/clientset/versioned/typed/scaling/v1alpha1"
-	reflect "reflect"
 )
 
-// MockScheduledScalersGetter is a mock of ScheduledScalersGetter interface
+// MockScheduledScalersGetter is a mock of ScheduledScalersGetter interface.
 type MockScheduledScalersGetter struct {
 	ctrl     *gomock.Controller
 	recorder *MockScheduledScalersGetterMockRecorder
 }
 
-// MockScheduledScalersGetterMockRecorder is the mock recorder for MockScheduledScalersGetter
+// MockScheduledScalersGetterMockRecorder is the mock recorder for MockScheduledScalersGetter.
 type MockScheduledScalersGetterMockRecorder struct {
 	mock *MockScheduledScalersGetter
 }
 
-// NewMockScheduledScalersGetter creates a new mock instance
+// NewMockScheduledScalersGetter creates a new mock instance.
 func NewMockScheduledScalersGetter(ctrl *gomock.Controller) *MockScheduledScalersGetter {
 	mock := &MockScheduledScalersGetter{ctrl: ctrl}
 	mock.recorder = &MockScheduledScalersGetterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockScheduledScalersGetter) EXPECT() *MockScheduledScalersGetterMockRecorder {
 	return m.recorder
 }
 
-// ScheduledScalers mocks base method
+// ScheduledScalers mocks base method.
 func (m *MockScheduledScalersGetter) ScheduledScalers(arg0 string) v1alpha10.ScheduledScalerInterface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ScheduledScalers", arg0)
@@ -45,113 +47,113 @@ func (m *MockScheduledScalersGetter) ScheduledScalers(arg0 string) v1alpha10.Sch
 	return ret0
 }
 
-// ScheduledScalers indicates an expected call of ScheduledScalers
+// ScheduledScalers indicates an expected call of ScheduledScalers.
 func (mr *MockScheduledScalersGetterMockRecorder) ScheduledScalers(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ScheduledScalers", reflect.TypeOf((*MockScheduledScalersGetter)(nil).ScheduledScalers), arg0)
 }
 
-// MockScheduledScalerInterface is a mock of ScheduledScalerInterface interface
+// MockScheduledScalerInterface is a mock of ScheduledScalerInterface interface.
 type MockScheduledScalerInterface struct {
 	ctrl     *gomock.Controller
 	recorder *MockScheduledScalerInterfaceMockRecorder
 }
 
-// MockScheduledScalerInterfaceMockRecorder is the mock recorder for MockScheduledScalerInterface
+// MockScheduledScalerInterfaceMockRecorder is the mock recorder for MockScheduledScalerInterface.
 type MockScheduledScalerInterfaceMockRecorder struct {
 	mock *MockScheduledScalerInterface
 }
 
-// NewMockScheduledScalerInterface creates a new mock instance
+// NewMockScheduledScalerInterface creates a new mock instance.
 func NewMockScheduledScalerInterface(ctrl *gomock.Controller) *MockScheduledScalerInterface {
 	mock := &MockScheduledScalerInterface{ctrl: ctrl}
 	mock.recorder = &MockScheduledScalerInterfaceMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockScheduledScalerInterface) EXPECT() *MockScheduledScalerInterfaceMockRecorder {
 	return m.recorder
 }
 
-// Create mocks base method
-func (m *MockScheduledScalerInterface) Create(arg0 *v1alpha1.ScheduledScaler) (*v1alpha1.ScheduledScaler, error) {
+// Create mocks base method.
+func (m *MockScheduledScalerInterface) Create(arg0 context.Context, arg1 *v1alpha1.ScheduledScaler, arg2 v1.CreateOptions) (*v1alpha1.ScheduledScaler, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", arg0)
+	ret := m.ctrl.Call(m, "Create", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*v1alpha1.ScheduledScaler)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Create indicates an expected call of Create
-func (mr *MockScheduledScalerInterfaceMockRecorder) Create(arg0 interface{}) *gomock.Call {
+// Create indicates an expected call of Create.
+func (mr *MockScheduledScalerInterfaceMockRecorder) Create(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockScheduledScalerInterface)(nil).Create), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockScheduledScalerInterface)(nil).Create), arg0, arg1, arg2)
 }
 
-// Delete mocks base method
-func (m *MockScheduledScalerInterface) Delete(arg0 string, arg1 *v1.DeleteOptions) error {
+// Delete mocks base method.
+func (m *MockScheduledScalerInterface) Delete(arg0 context.Context, arg1 string, arg2 v1.DeleteOptions) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", arg0, arg1)
+	ret := m.ctrl.Call(m, "Delete", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Delete indicates an expected call of Delete
-func (mr *MockScheduledScalerInterfaceMockRecorder) Delete(arg0, arg1 interface{}) *gomock.Call {
+// Delete indicates an expected call of Delete.
+func (mr *MockScheduledScalerInterfaceMockRecorder) Delete(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockScheduledScalerInterface)(nil).Delete), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockScheduledScalerInterface)(nil).Delete), arg0, arg1, arg2)
 }
 
-// DeleteCollection mocks base method
-func (m *MockScheduledScalerInterface) DeleteCollection(arg0 *v1.DeleteOptions, arg1 v1.ListOptions) error {
+// DeleteCollection mocks base method.
+func (m *MockScheduledScalerInterface) DeleteCollection(arg0 context.Context, arg1 v1.DeleteOptions, arg2 v1.ListOptions) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteCollection", arg0, arg1)
+	ret := m.ctrl.Call(m, "DeleteCollection", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// DeleteCollection indicates an expected call of DeleteCollection
-func (mr *MockScheduledScalerInterfaceMockRecorder) DeleteCollection(arg0, arg1 interface{}) *gomock.Call {
+// DeleteCollection indicates an expected call of DeleteCollection.
+func (mr *MockScheduledScalerInterfaceMockRecorder) DeleteCollection(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCollection", reflect.TypeOf((*MockScheduledScalerInterface)(nil).DeleteCollection), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCollection", reflect.TypeOf((*MockScheduledScalerInterface)(nil).DeleteCollection), arg0, arg1, arg2)
 }
 
-// Get mocks base method
-func (m *MockScheduledScalerInterface) Get(arg0 string, arg1 v1.GetOptions) (*v1alpha1.ScheduledScaler, error) {
+// Get mocks base method.
+func (m *MockScheduledScalerInterface) Get(arg0 context.Context, arg1 string, arg2 v1.GetOptions) (*v1alpha1.ScheduledScaler, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", arg0, arg1)
+	ret := m.ctrl.Call(m, "Get", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*v1alpha1.ScheduledScaler)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Get indicates an expected call of Get
-func (mr *MockScheduledScalerInterfaceMockRecorder) Get(arg0, arg1 interface{}) *gomock.Call {
+// Get indicates an expected call of Get.
+func (mr *MockScheduledScalerInterfaceMockRecorder) Get(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockScheduledScalerInterface)(nil).Get), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockScheduledScalerInterface)(nil).Get), arg0, arg1, arg2)
 }
 
-// List mocks base method
-func (m *MockScheduledScalerInterface) List(arg0 v1.ListOptions) (*v1alpha1.ScheduledScalerList, error) {
+// List mocks base method.
+func (m *MockScheduledScalerInterface) List(arg0 context.Context, arg1 v1.ListOptions) (*v1alpha1.ScheduledScalerList, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List", arg0)
+	ret := m.ctrl.Call(m, "List", arg0, arg1)
 	ret0, _ := ret[0].(*v1alpha1.ScheduledScalerList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// List indicates an expected call of List
-func (mr *MockScheduledScalerInterfaceMockRecorder) List(arg0 interface{}) *gomock.Call {
+// List indicates an expected call of List.
+func (mr *MockScheduledScalerInterfaceMockRecorder) List(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockScheduledScalerInterface)(nil).List), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockScheduledScalerInterface)(nil).List), arg0, arg1)
 }
 
-// Patch mocks base method
-func (m *MockScheduledScalerInterface) Patch(arg0 string, arg1 types.PatchType, arg2 []byte, arg3 ...string) (*v1alpha1.ScheduledScaler, error) {
+// Patch mocks base method.
+func (m *MockScheduledScalerInterface) Patch(arg0 context.Context, arg1 string, arg2 types.PatchType, arg3 []byte, arg4 v1.PatchOptions, arg5 ...string) (*v1alpha1.ScheduledScaler, error) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0, arg1, arg2}
-	for _, a := range arg3 {
+	varargs := []interface{}{arg0, arg1, arg2, arg3, arg4}
+	for _, a := range arg5 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Patch", varargs...)
@@ -160,39 +162,39 @@ func (m *MockScheduledScalerInterface) Patch(arg0 string, arg1 types.PatchType, 
 	return ret0, ret1
 }
 
-// Patch indicates an expected call of Patch
-func (mr *MockScheduledScalerInterfaceMockRecorder) Patch(arg0, arg1, arg2 interface{}, arg3 ...interface{}) *gomock.Call {
+// Patch indicates an expected call of Patch.
+func (mr *MockScheduledScalerInterfaceMockRecorder) Patch(arg0, arg1, arg2, arg3, arg4 interface{}, arg5 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0, arg1, arg2}, arg3...)
+	varargs := append([]interface{}{arg0, arg1, arg2, arg3, arg4}, arg5...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Patch", reflect.TypeOf((*MockScheduledScalerInterface)(nil).Patch), varargs...)
 }
 
-// Update mocks base method
-func (m *MockScheduledScalerInterface) Update(arg0 *v1alpha1.ScheduledScaler) (*v1alpha1.ScheduledScaler, error) {
+// Update mocks base method.
+func (m *MockScheduledScalerInterface) Update(arg0 context.Context, arg1 *v1alpha1.ScheduledScaler, arg2 v1.UpdateOptions) (*v1alpha1.ScheduledScaler, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", arg0)
+	ret := m.ctrl.Call(m, "Update", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*v1alpha1.ScheduledScaler)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Update indicates an expected call of Update
-func (mr *MockScheduledScalerInterfaceMockRecorder) Update(arg0 interface{}) *gomock.Call {
+// Update indicates an expected call of Update.
+func (mr *MockScheduledScalerInterfaceMockRecorder) Update(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockScheduledScalerInterface)(nil).Update), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockScheduledScalerInterface)(nil).Update), arg0, arg1, arg2)
 }
 
-// Watch mocks base method
-func (m *MockScheduledScalerInterface) Watch(arg0 v1.ListOptions) (watch.Interface, error) {
+// Watch mocks base method.
+func (m *MockScheduledScalerInterface) Watch(arg0 context.Context, arg1 v1.ListOptions) (watch.Interface, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Watch", arg0)
+	ret := m.ctrl.Call(m, "Watch", arg0, arg1)
 	ret0, _ := ret[0].(watch.Interface)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Watch indicates an expected call of Watch
-func (mr *MockScheduledScalerInterfaceMockRecorder) Watch(arg0 interface{}) *gomock.Call {
+// Watch indicates an expected call of Watch.
+func (mr *MockScheduledScalerInterfaceMockRecorder) Watch(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Watch", reflect.TypeOf((*MockScheduledScalerInterface)(nil).Watch), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Watch", reflect.TypeOf((*MockScheduledScalerInterface)(nil).Watch), arg0, arg1)
 }
