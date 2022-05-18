@@ -3,6 +3,7 @@ DATE:=$(shell date +%s)
 GOBIN=go
 GOBUILD=$(GOBIN) build
 GOTEST=$(GOBIN) test
+GOPATH ?= $(shell go env GOPATH)
 
 OPERATOR?=scaling
 CONTROLLER=$(OPERATOR)-controller.go
