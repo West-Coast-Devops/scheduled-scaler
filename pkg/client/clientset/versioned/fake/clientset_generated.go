@@ -77,10 +77,7 @@ func (c *Clientset) Tracker() testing.ObjectTracker {
 	return c.tracker
 }
 
-var (
-	_ clientset.Interface = &Clientset{}
-	_ testing.FakeClient  = &Clientset{}
-)
+var _ clientset.Interface = &Clientset{}
 
 // ScalingV1alpha1 retrieves the ScalingV1alpha1Client
 func (c *Clientset) ScalingV1alpha1() scalingv1alpha1.ScalingV1alpha1Interface {

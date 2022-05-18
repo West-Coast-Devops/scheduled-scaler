@@ -108,7 +108,7 @@ func (c *FakeScheduledScalers) Update(ctx context.Context, scheduledScaler *v1al
 // Delete takes name of the scheduledScaler and deletes it. Returns an error if one occurs.
 func (c *FakeScheduledScalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(scheduledscalersResource, c.ns, name, opts), &v1alpha1.ScheduledScaler{})
+		Invokes(testing.NewDeleteAction(scheduledscalersResource, c.ns, name), &v1alpha1.ScheduledScaler{})
 
 	return err
 }

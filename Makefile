@@ -19,7 +19,11 @@ KN_PROJECT_ID?=$(PROJECT_ID)
 
 .PHONY: test
 
-all: test build push deploy
+all: codegen test build push deploy
+ci: codegen test build push
+localbin: codegen test build
+codegen:
+	./hack/update-codegen.sh
 test:
 	$(GOTEST) $(TEST_CONTROLLER) $(CONTROLLER)
 	$(GOTEST) ./...
