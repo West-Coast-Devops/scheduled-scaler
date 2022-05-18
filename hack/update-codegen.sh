@@ -22,11 +22,10 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-SCRIPT_ROOT=$(dirname "${BASH_SOURCE[0]}")/..
-CODEGEN_PKG=${CODEGEN_PKG:-$(cd "${SCRIPT_ROOT}"; ls -d -1 ./vendor/k8s.io/code-generator 2>/dev/null || echo ../code-generator)}
+SCRIPT_ROOT=$(dirname ${BASH_SOURCE})/..
+CODEGEN_PKG="../../k8s.io/code-generator"
 MODULE_NAME="k8s.restdev.com/operators"
 MODULE_PATH="${GOPATH}/src/${MODULE_NAME}"
-
 if [ $PWD != $MODULE_PATH ]; then
   echo "Invalid module path! Please refer to the documentation..."
   echo -e "${RED}Current Path:${NC} $PWD"
@@ -34,13 +33,13 @@ if [ $PWD != $MODULE_PATH ]; then
   exit 1
 fi
 
-
 # generate the code with:
 # --output-base    because this script should also be able to run inside the vendor dir of
 #                  k8s.io/kubernetes. The output-base is needed for the generators to output into the vendor dir
 #                  instead of the $GOPATH directly. For normal projects this can be dropped.
-bash "${CODEGEN_PKG}"/generate-groups.sh "deepcopy,client,informer,lister" \
-  "${MODULE_NAME}"/pkg/client "${MODULE_NAME}"/pkg/apis \
-  scaling:v1alpha1 \
-  --output-base "$(dirname "${BASH_SOURCE[0]}")/../../.." \
-  --go-header-file "${SCRIPT_ROOT}"/hack/header.go.txt
+${CODEGEN_PKG}/generate-groups.sh "deepcopy,client,informer,lister" \
+  ${MODULE_NAME}/pkg/client ${MODULE_NAME}/pkg/apis \
+  scaling:v1alpha1
+
+# To use your own boilerplate text append:
+#   --go-header-file ${SCRIPT_ROOT}/hack/custom-boilerplate.go.txt
