@@ -35,6 +35,15 @@
         "infra",
         "doc"
       ]
+    },
+    {
+      "login": "andwun",
+      "name": "Andreas Wunderlich",
+      "avatar_url": "https://avatars.githubusercontent.com/u/252058?v=4",
+      "profile": "https://andwun.me/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
