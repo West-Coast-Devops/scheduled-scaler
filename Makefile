@@ -24,7 +24,8 @@ all: codegen test build push deploy
 ci: codegen test build push
 localbin: codegen test build
 codegen:
-	./hack/update-codegen.sh
+	./hack/update-codegen.sh && \
+	go generate ./...
 test:
 	$(GOTEST) $(TEST_CONTROLLER) $(CONTROLLER)
 	$(GOTEST) ./...
