@@ -15,6 +15,16 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "vnandha",
+      "name": "vnandha",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10261643?v=4",
+      "profile": "https://github.com/vnandha",
+      "contributions": [
+        "bug",
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
