@@ -1,4 +1,7 @@
 # Scheduled Scaler
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/k8srestdev/scaling?style=for-the-badge)](https://hub.docker.com/repository/docker/k8srestdev/scaling) [![Travis (.com) branch](https://img.shields.io/travis/com/West-Coast-Devops/scheduled-scaler/master?style=for-the-badge)](https://travis-ci.com/github/West-Coast-Devops/scheduled-scaler)
 
 In order to use the ScheduledScaler you will need to install the CRD and deploy the Scaling Controller into your Kubernetes cluster.
@@ -156,3 +159,23 @@ As you'll see above, you can target either instance groups (if you are on GKE) o
 
 For more details on how this add-on can be used please follow the link below:
 [Learn More...](http://k8s.restdev.com/p/scheduled-scaler.html)
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/scr-oath"><img src="https://avatars.githubusercontent.com/u/41922797?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sheridan C Rawlins</b></sub></a><br /><a href="#maintenance-scr-oath" title="Maintenance">🚧</a> <a href="https://github.com/West-Coast-Devops/scheduled-scaler/commits?author=scr-oath" title="Tests">⚠️</a> <a href="https://github.com/West-Coast-Devops/scheduled-scaler/commits?author=scr-oath" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
