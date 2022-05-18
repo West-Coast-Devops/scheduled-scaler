@@ -1,6 +1,6 @@
 # Scheduled Scaler
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/k8srestdev/scaling?style=for-the-badge)](https://hub.docker.com/repository/docker/k8srestdev/scaling) [![Travis (.com) branch](https://img.shields.io/travis/com/West-Coast-Devops/scheduled-scaler/master?style=for-the-badge)](https://travis-ci.com/github/West-Coast-Devops/scheduled-scaler)
 
@@ -172,6 +172,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/scr-oath"><img src="https://avatars.githubusercontent.com/u/41922797?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sheridan C Rawlins</b></sub></a><br /><a href="#maintenance-scr-oath" title="Maintenance">🚧</a> <a href="https://github.com/West-Coast-Devops/scheduled-scaler/commits?author=scr-oath" title="Tests">⚠️</a> <a href="https://github.com/West-Coast-Devops/scheduled-scaler/commits?author=scr-oath" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/vnandha"><img src="https://avatars.githubusercontent.com/u/10261643?v=4?s=100" width="100px;" alt=""/><br /><sub><b>vnandha</b></sub></a><br /><a href="https://github.com/West-Coast-Devops/scheduled-scaler/issues?q=author%3Avnandha" title="Bug reports">🐛</a> <a href="#maintenance-vnandha" title="Maintenance">🚧</a></td>
     <td align="center"><a href="https://twitter.com/vincentdesmet"><img src="https://avatars.githubusercontent.com/u/1762599?v=4?s=100" width="100px;" alt=""/><br /><sub><b>so0k</b></sub></a><br /><a href="#infra-so0k" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/West-Coast-Devops/scheduled-scaler/commits?author=so0k" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://andwun.me/"><img src="https://avatars.githubusercontent.com/u/252058?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Andreas Wunderlich</b></sub></a><br /><a href="https://github.com/West-Coast-Devops/scheduled-scaler/commits?author=andwun" title="Documentation">📖</a></td>
   </tr>
 </table>
 
