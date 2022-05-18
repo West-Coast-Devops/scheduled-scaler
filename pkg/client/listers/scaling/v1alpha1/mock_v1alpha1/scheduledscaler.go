@@ -5,37 +5,38 @@
 package mock_v1alpha1
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	labels "k8s.io/apimachinery/pkg/labels"
 	v1alpha1 "k8s.restdev.com/operators/pkg/apis/scaling/v1alpha1"
 	v1alpha10 "k8s.restdev.com/operators/pkg/client/listers/scaling/v1alpha1"
-	reflect "reflect"
 )
 
-// MockScheduledScalerLister is a mock of ScheduledScalerLister interface
+// MockScheduledScalerLister is a mock of ScheduledScalerLister interface.
 type MockScheduledScalerLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockScheduledScalerListerMockRecorder
 }
 
-// MockScheduledScalerListerMockRecorder is the mock recorder for MockScheduledScalerLister
+// MockScheduledScalerListerMockRecorder is the mock recorder for MockScheduledScalerLister.
 type MockScheduledScalerListerMockRecorder struct {
 	mock *MockScheduledScalerLister
 }
 
-// NewMockScheduledScalerLister creates a new mock instance
+// NewMockScheduledScalerLister creates a new mock instance.
 func NewMockScheduledScalerLister(ctrl *gomock.Controller) *MockScheduledScalerLister {
 	mock := &MockScheduledScalerLister{ctrl: ctrl}
 	mock.recorder = &MockScheduledScalerListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockScheduledScalerLister) EXPECT() *MockScheduledScalerListerMockRecorder {
 	return m.recorder
 }
 
-// List mocks base method
+// List mocks base method.
 func (m *MockScheduledScalerLister) List(arg0 labels.Selector) ([]*v1alpha1.ScheduledScaler, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", arg0)
@@ -44,13 +45,13 @@ func (m *MockScheduledScalerLister) List(arg0 labels.Selector) ([]*v1alpha1.Sche
 	return ret0, ret1
 }
 
-// List indicates an expected call of List
+// List indicates an expected call of List.
 func (mr *MockScheduledScalerListerMockRecorder) List(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockScheduledScalerLister)(nil).List), arg0)
 }
 
-// ScheduledScalers mocks base method
+// ScheduledScalers mocks base method.
 func (m *MockScheduledScalerLister) ScheduledScalers(arg0 string) v1alpha10.ScheduledScalerNamespaceLister {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ScheduledScalers", arg0)
@@ -58,36 +59,36 @@ func (m *MockScheduledScalerLister) ScheduledScalers(arg0 string) v1alpha10.Sche
 	return ret0
 }
 
-// ScheduledScalers indicates an expected call of ScheduledScalers
+// ScheduledScalers indicates an expected call of ScheduledScalers.
 func (mr *MockScheduledScalerListerMockRecorder) ScheduledScalers(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ScheduledScalers", reflect.TypeOf((*MockScheduledScalerLister)(nil).ScheduledScalers), arg0)
 }
 
-// MockScheduledScalerNamespaceLister is a mock of ScheduledScalerNamespaceLister interface
+// MockScheduledScalerNamespaceLister is a mock of ScheduledScalerNamespaceLister interface.
 type MockScheduledScalerNamespaceLister struct {
 	ctrl     *gomock.Controller
 	recorder *MockScheduledScalerNamespaceListerMockRecorder
 }
 
-// MockScheduledScalerNamespaceListerMockRecorder is the mock recorder for MockScheduledScalerNamespaceLister
+// MockScheduledScalerNamespaceListerMockRecorder is the mock recorder for MockScheduledScalerNamespaceLister.
 type MockScheduledScalerNamespaceListerMockRecorder struct {
 	mock *MockScheduledScalerNamespaceLister
 }
 
-// NewMockScheduledScalerNamespaceLister creates a new mock instance
+// NewMockScheduledScalerNamespaceLister creates a new mock instance.
 func NewMockScheduledScalerNamespaceLister(ctrl *gomock.Controller) *MockScheduledScalerNamespaceLister {
 	mock := &MockScheduledScalerNamespaceLister{ctrl: ctrl}
 	mock.recorder = &MockScheduledScalerNamespaceListerMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockScheduledScalerNamespaceLister) EXPECT() *MockScheduledScalerNamespaceListerMockRecorder {
 	return m.recorder
 }
 
-// Get mocks base method
+// Get mocks base method.
 func (m *MockScheduledScalerNamespaceLister) Get(arg0 string) (*v1alpha1.ScheduledScaler, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Get", arg0)
@@ -96,13 +97,13 @@ func (m *MockScheduledScalerNamespaceLister) Get(arg0 string) (*v1alpha1.Schedul
 	return ret0, ret1
 }
 
-// Get indicates an expected call of Get
+// Get indicates an expected call of Get.
 func (mr *MockScheduledScalerNamespaceListerMockRecorder) Get(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockScheduledScalerNamespaceLister)(nil).Get), arg0)
 }
 
-// List mocks base method
+// List mocks base method.
 func (m *MockScheduledScalerNamespaceLister) List(arg0 labels.Selector) ([]*v1alpha1.ScheduledScaler, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", arg0)
@@ -111,7 +112,7 @@ func (m *MockScheduledScalerNamespaceLister) List(arg0 labels.Selector) ([]*v1al
 	return ret0, ret1
 }
 
-// List indicates an expected call of List
+// List indicates an expected call of List.
 func (mr *MockScheduledScalerNamespaceListerMockRecorder) List(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockScheduledScalerNamespaceLister)(nil).List), arg0)
