@@ -1,6 +1,6 @@
 module k8s.restdev.com/operators
 
-go 1.15
+go 1.17
 
 require (
 	github.com/go-openapi/jsonreference v0.19.5 // indirect
