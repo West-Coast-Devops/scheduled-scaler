@@ -18,11 +18,13 @@ DOCKERBUILD=$(DOCKERBIN) build --build-arg bin=$(BIN) -t $(IMAGE) .
 DEPLOYBIN?=kubectl
 KN_PROJECT_ID?=$(PROJECT_ID)
 
-.PHONY: test
+.PHONY: test all ci localbin tools
 
-all: codegen test build push deploy
-ci: codegen test build push
-localbin: codegen test build
+all: tools codegen test build push deploy
+ci: tools codegen test build push
+localbin: tools codegen test build
+tools:
+	go run k8s.restdev.com/operators/tools/gettools -v 2 -alsologtostderr
 codegen:
 	./hack/update-codegen.sh && \
 	go generate ./...
