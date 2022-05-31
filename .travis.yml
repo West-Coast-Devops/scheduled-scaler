@@ -7,10 +7,9 @@ services:
 jobs:
   include:
     - stage: Testing
-      script: make test OPERATOR=scaling
+      script: make ci-test OPERATOR=scaling
     - stage: Dockerizing
-      if: tag =~ ^(test-)?[0-9]+.[0-9]+.[0-9]+$
+      if: tag =~ ^[0-9]+.[0-9]+.[0-9]+(-beta[0-9]+)?$
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - make build OPERATOR="scaling" VERSION="$TRAVIS_TAG"
-      - make push OPERATOR="scaling" VERSION="$TRAVIS_TAG"
+      - make ci-deploy OPERATOR="scaling" VERSION="$TRAVIS_TAG"
