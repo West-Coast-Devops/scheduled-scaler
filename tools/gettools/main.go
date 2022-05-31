@@ -27,7 +27,7 @@ func main() {
 	for _, imp := range f.Imports {
 		var importPath string
 		if err = json.Unmarshal([]byte(imp.Path.Value), &importPath); err != nil {
-			glog.Fatal("error unmarshalling %s: %v", imp.Path.Value, err)
+			glog.Fatalf("error unmarshalling %s: %v", imp.Path.Value, err)
 		}
 		glog.V(2).Info("import ", importPath)
 		cmd := exec.Command("go", "install", importPath)
