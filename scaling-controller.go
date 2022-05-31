@@ -20,6 +20,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 
 	"context"
+
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/compute/v1"
 	scalingv1alpha1 "k8s.restdev.com/operators/pkg/apis/scaling/v1alpha1"
@@ -127,7 +128,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 		return
 	}
 	hpaClient := c.kubeClient.AutoscalingV1().HorizontalPodAutoscalers(scheduledScaler.Namespace)
-	hpa, err := hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
+	hpa, err := hpaClient.Get(context.TODO(), scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
 	if err != nil {
 		utilruntime.HandleError(fmt.Errorf(
 			"FAILED TO GET HPA: %s - %w", scheduledScaler.Spec.Target.Name, err))
@@ -159,7 +160,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 					"FAILED TO UPDATE HPA: %s after %d retries", scheduledScaler.Spec.Target.Name, hpaRetries))
 				return
 			}
-			hpa, err = hpaClient.Get(scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
+			hpa, err = hpaClient.Get(context.TODO(), scheduledScaler.Spec.Target.Name, metav1.GetOptions{})
 			if err != nil {
 				utilruntime.HandleError(fmt.Errorf(
 					"FAILED TO UPDATE HPA: %s - %w", scheduledScaler.Spec.Target.Name, err))
@@ -167,7 +168,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 			}
 			hpa.Spec.MinReplicas = min
 			hpa.Spec.MaxReplicas = *max
-			_, err = hpaClient.Update(hpa)
+			_, err = hpaClient.Update(context.TODO(), hpa, metav1.UpdateOptions{})
 			if apierr.IsConflict(err) {
 				glog.Infof("FAILED TO UPDATE HPA: %s - %v; retrying", scheduledScaler.Spec.Target.Name, err)
 				hpaRetries++
@@ -185,7 +186,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 					"FAILED TO UPDATE SS: %s after %d retries", scheduledScaler.Name, ssRetries))
 				return
 			}
-			ss, err := ssClient.Get(scheduledScaler.Name, metav1.GetOptions{})
+			ss, err := ssClient.Get(context.TODO(), scheduledScaler.Name, metav1.GetOptions{})
 			if err != nil {
 				utilruntime.HandleError(fmt.Errorf(
 					"FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %w", scheduledScaler.Name, err))
@@ -194,7 +195,7 @@ func (c *ScheduledScalerController) scheduledScalerHpaCronAdd(scheduledScaler *s
 			ss.Status.Mode = step.Mode
 			ss.Status.MinReplicas = *min
 			ss.Status.MaxReplicas = *max
-			_, err = ssClient.Update(ss)
+			_, err = ssClient.Update(context.TODO(), ss, metav1.UpdateOptions{})
 			if apierr.IsConflict(err) {
 				glog.Infof("FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %v; retrying", scheduledScaler.Name, err)
 				ssRetries++
@@ -262,7 +263,7 @@ func (c *ScheduledScalerController) scheduledScalerIgCronAdd(scheduledScaler *sc
 			ssCopy.Status.Mode = step.Mode
 			ssCopy.Status.MinReplicas = *min
 			ssCopy.Status.MaxReplicas = *max
-			if _, err = c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(ssCopy); err != nil {
+			if _, err = c.restdevClient.ScalingV1alpha1().ScheduledScalers(scheduledScaler.Namespace).Update(context.TODO(), ssCopy, metav1.UpdateOptions{}); err != nil {
 				utilruntime.HandleError(fmt.Errorf(
 					"FAILED TO UPDATE SCHEDULED SCALER STATUS: %s - %w", scheduledScaler.Name, err))
 			}

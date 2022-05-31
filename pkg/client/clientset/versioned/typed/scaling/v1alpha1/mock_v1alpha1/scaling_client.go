@@ -5,36 +5,37 @@
 package mock_v1alpha1
 
 import (
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	rest "k8s.io/client-go/rest"
 	v1alpha1 "k8s.restdev.com/operators/pkg/client/clientset/versioned/typed/scaling/v1alpha1"
-	reflect "reflect"
 )
 
-// MockScalingV1alpha1Interface is a mock of ScalingV1alpha1Interface interface
+// MockScalingV1alpha1Interface is a mock of ScalingV1alpha1Interface interface.
 type MockScalingV1alpha1Interface struct {
 	ctrl     *gomock.Controller
 	recorder *MockScalingV1alpha1InterfaceMockRecorder
 }
 
-// MockScalingV1alpha1InterfaceMockRecorder is the mock recorder for MockScalingV1alpha1Interface
+// MockScalingV1alpha1InterfaceMockRecorder is the mock recorder for MockScalingV1alpha1Interface.
 type MockScalingV1alpha1InterfaceMockRecorder struct {
 	mock *MockScalingV1alpha1Interface
 }
 
-// NewMockScalingV1alpha1Interface creates a new mock instance
+// NewMockScalingV1alpha1Interface creates a new mock instance.
 func NewMockScalingV1alpha1Interface(ctrl *gomock.Controller) *MockScalingV1alpha1Interface {
 	mock := &MockScalingV1alpha1Interface{ctrl: ctrl}
 	mock.recorder = &MockScalingV1alpha1InterfaceMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockScalingV1alpha1Interface) EXPECT() *MockScalingV1alpha1InterfaceMockRecorder {
 	return m.recorder
 }
 
-// RESTClient mocks base method
+// RESTClient mocks base method.
 func (m *MockScalingV1alpha1Interface) RESTClient() rest.Interface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RESTClient")
@@ -42,13 +43,13 @@ func (m *MockScalingV1alpha1Interface) RESTClient() rest.Interface {
 	return ret0
 }
 
-// RESTClient indicates an expected call of RESTClient
+// RESTClient indicates an expected call of RESTClient.
 func (mr *MockScalingV1alpha1InterfaceMockRecorder) RESTClient() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RESTClient", reflect.TypeOf((*MockScalingV1alpha1Interface)(nil).RESTClient))
 }
 
-// ScheduledScalers mocks base method
+// ScheduledScalers mocks base method.
 func (m *MockScalingV1alpha1Interface) ScheduledScalers(arg0 string) v1alpha1.ScheduledScalerInterface {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ScheduledScalers", arg0)
@@ -56,7 +57,7 @@ func (m *MockScalingV1alpha1Interface) ScheduledScalers(arg0 string) v1alpha1.Sc
 	return ret0
 }
 
-// ScheduledScalers indicates an expected call of ScheduledScalers
+// ScheduledScalers indicates an expected call of ScheduledScalers.
 func (mr *MockScalingV1alpha1InterfaceMockRecorder) ScheduledScalers(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ScheduledScalers", reflect.TypeOf((*MockScalingV1alpha1Interface)(nil).ScheduledScalers), arg0)
