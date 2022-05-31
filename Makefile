@@ -25,6 +25,7 @@ ci-test: tools codegen test
 ci-deploy: tools codegen test build push
 localbin: tools codegen test build
 tools:
+	go mod vendor && \
 	go run k8s.restdev.com/operators/tools/gettools -v 2 -alsologtostderr
 codegen:
 	./hack/update-codegen.sh && \
