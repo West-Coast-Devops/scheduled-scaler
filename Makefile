@@ -13,7 +13,8 @@ BIN=bin/k8s-restdev-$(OPERATOR)
 DOCKERBIN=docker
 VERSION?=kube-system.$(DATE)
 IMAGE?=k8srestdev/$(OPERATOR):$(VERSION)
-DOCKERBUILD=$(DOCKERBIN) build --build-arg bin=$(BIN) -t $(IMAGE) .
+DOCKERFILE?=Dockerfile
+DOCKERBUILD=$(DOCKERBIN) build -f $(DOCKERFILE) --build-arg bin=$(BIN) -t $(IMAGE) .
 
 DEPLOYBIN?=kubectl
 KN_PROJECT_ID?=$(PROJECT_ID)
