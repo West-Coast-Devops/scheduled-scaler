@@ -12,7 +12,7 @@ jobs:
       if: tag =~ ^[0-9]+.[0-9]+.[0-9]+(-beta[0-9]+)$
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - make ci-deploy OPERATOR="scaling" VERSION="$TRAVIS_TAG" DOCKERFILE="Dockerfile.beta"
+      - make ci-deploy OPERATOR="scaling" VERSION="$TRAVIS_TAG" DOCKERFILE="Dockerfile.beta" GCO_ENABLED=0
     - stage: Deploying Main Release 
       if: tag =~ ^[0-9]+.[0-9]+.[0-9]+$
       script:
