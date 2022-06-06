@@ -4,7 +4,7 @@ GOBIN=go
 GOBUILD=$(GOBIN) build
 GOTEST=$(GOBIN) test
 GOPATH?= $(shell go env GOPATH)
-GCO_ENABLED?=1
+CGO_ENABLED?=1
 GOARCH?=amd64
 
 OPERATOR?=scaling
@@ -37,7 +37,7 @@ test:
 	$(GOTEST) $(TEST_CONTROLLER) $(CONTROLLER)
 	$(GOTEST) ./...
 build:
-	GOOS=linux GOARCH=$(GOARCH) GCO_ENABLED=$(GCO_ENABLED) $(GOBUILD) \
+	GOOS=linux GOARCH=$(GOARCH) CGO_ENABLED=$(CGO_ENABLED) $(GOBUILD) \
   -a --ldflags '-extldflags "-static"' \
   -tags netgo \
   -installsuffix netgo \
