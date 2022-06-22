@@ -17,4 +17,4 @@ jobs:
       if: tag =~ ^[0-9]+.[0-9]+.[0-9]+$
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - make ci-deploy OPERATOR="scaling" VERSION="$TRAVIS_TAG"
+      - make ci-deploy OPERATOR="scaling" VERSION="$TRAVIS_TAG" CGO_ENABLED=0

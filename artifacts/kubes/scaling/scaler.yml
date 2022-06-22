@@ -1,4 +1,4 @@
-apiVersion: "scaling.k8s.restdev.com/v1alpha1"
+apiVersion: "scaling.k8s.restdev.com/v1"
 kind: ScheduledScaler
 metadata:
   name: my-scheduled-scaler-1
