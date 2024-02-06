@@ -6,7 +6,6 @@ metadata:
 spec:
   # group name to use for REST API: /apis/<group>/<version>
   group: scaling.k8s.restdev.com
-  # version name to use for REST API: /apis/<group>/<version>
   versions:
     # version name to use for REST API: /apis/<group>/<version>
     - name: v1alpha1
@@ -14,39 +13,53 @@ spec:
       storage: true
       schema:
         openAPIV3Schema:
+          description: "ScheduledScaler is the Schema for the scheduled-scaler API"
           type: object
           properties:
             spec:
+              description: "ScheduledScalerSpec is the specification of a ScheduledScaler"
               type: object
               properties:
                 timeZone:
+                  description: "Timezone to use for the cronjob"
                   type: string
                 target:
+                  description: "Target to scale"
                   type: object
                   properties:
                     kind:
+                      description: "Kind of the target (InstanceGroup/HorizontalPodAutoscaler)"
                       type: string
                     name:
+                      description: "Name of the target resource"
                       type: string
                     apiVersion:
+                      description: "API version of the target resource"
                       type: string
                   required: ["kind", "name", "apiVersion"]
                 steps:
+                  description: "List of steps to scale the target resource at a specific time."
                   type: array
                   items:
+                    description: "Step to scale the target resource at a specific time."
                     type: object
                     properties:
                       runat:
+                        description: "Cronjob time string (gocron) to run the scaling. Uses Cron Expression Format, https://pkg.go.dev/github.com/robfig/cron#hdr-CRON_Expression_Format"
                         type: string
                         pattern: "^(((\\d+|\\d+(-|\\/)\\d+)(,(\\d+|\\d+(-|\\/)\\d+))*|\\*) ){5}((\\d+|\\d+(-|\\/)\\d+)(,(\\d+|\\d+(-|\\/)\\d+))*|\\*)$"
                       mode:
+                        description: "Type of scaling to run. 'fixed': set replicas to a fixed value, 'range': set replicas to a range"
                         type: string
                         pattern: "^(fixed|range)$"
                       replicas:
+                        description: "Number of replicas to set when mode is 'fixed'"
                         type: integer
                       minReplicas:
+                        description: "Minimum number of replicas to set when mode is 'range'"
                         type: integer
                       maxReplicas:
+                        description: "Maximum number of replicas to set when mode is 'range'"
                         type: integer
                     required: ["runat", "mode"]
               required: ["target", "steps"]
