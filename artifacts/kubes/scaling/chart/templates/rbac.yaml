@@ -1,6 +1,6 @@
 {{- if .Values.rbac.create -}}
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: {{ template "scheduled-scaler.fullname" . }}
 rules:
@@ -26,7 +26,7 @@ metadata:
   name: {{ template "scheduled-scaler.fullname" . }}
   namespace: {{ .Release.Namespace }}
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "scheduled-scaler.fullname" . }}
